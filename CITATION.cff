@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this construction or its exact certificates, cite this research artifact."
+title: "Quantile Cycles: Strict Cycles in Finite Quantile Control"
+type: software
+authors:
+  - name: mottopanikeiku
+repository-code: "https://github.com/mottopanikeiku/quantile-cycles"
+url: "https://github.com/mottopanikeiku/quantile-cycles"
+license: MIT
+abstract: >-
+  An explicit family of finite quantile-projected Bellman control operators
+  with strict suboptimal cycles, exact rational certificates, and preserved
+  negative evidence from an earlier sampled-learning continuation. Research
+  note; external peer review and priority are not established.
