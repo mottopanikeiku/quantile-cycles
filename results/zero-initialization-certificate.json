@@ -1,0 +1,117 @@
+{
+  "checks": [
+    {
+      "k": 2,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-107/1920"
+    },
+    {
+      "k": 3,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-149/7560"
+    },
+    {
+      "k": 4,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-215/21504"
+    },
+    {
+      "k": 5,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-299/49500"
+    },
+    {
+      "k": 6,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-1999/494208"
+    },
+    {
+      "k": 7,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-517/178360"
+    },
+    {
+      "k": 8,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-4553/2088960"
+    },
+    {
+      "k": 9,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-400/235467"
+    },
+    {
+      "k": 10,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-2897/2128000"
+    },
+    {
+      "k": 11,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-5737/5142984"
+    },
+    {
+      "k": 12,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-14797/15897600"
+    },
+    {
+      "k": 13,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-1559/1977300"
+    },
+    {
+      "k": 14,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-23255/34376832"
+    },
+    {
+      "k": 15,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-14243/24273000"
+    },
+    {
+      "k": 16,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-11483/22347776"
+    },
+    {
+      "k": 32,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-268577/2146959360"
+    },
+    {
+      "k": 64,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-707435/22905094144"
+    },
+    {
+      "k": 128,
+      "iterations_checked": 6,
+      "exact_translation_formula": true,
+      "shift_at_iteration_two": "-16876673/2198989701120"
+    }
+  ],
+  "scope": "Finite checks of the symbolic translation-equivariance induction, not a global-start convergence claim.",
+  "source_sha256": {
+    "zero_initialization.py": "45e34ecc8a0fa02716bf29d1f4a658d63d34fea4fb29c021181ae13b3cf003cd",
+    "certify.py": "77d77bad1fd082a0b5e266a9049b25ff881cb64475670cc0d3b4fec173d6dfd9"
+  }
+}

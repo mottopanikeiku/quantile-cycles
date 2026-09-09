@@ -1,0 +1,460 @@
+{
+  "one_state": [
+    {
+      "k": 2,
+      "states": 1,
+      "discount": "1/4",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "3/128",
+      "cdf_margin": "1/16",
+      "true_reward_gap": "19/128",
+      "true_reward_gap_lower_bound": "19/128",
+      "frozen_bad_policy_loss": "19/96",
+      "local_phase_radius": "3/512",
+      "two_step_contraction": "1/16"
+    },
+    {
+      "k": 3,
+      "states": 1,
+      "discount": "1/6",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "5/216",
+      "cdf_margin": "1/36",
+      "true_reward_gap": "23/216",
+      "true_reward_gap_lower_bound": "23/216",
+      "frozen_bad_policy_loss": "23/180",
+      "local_phase_radius": "5/864",
+      "two_step_contraction": "1/36"
+    },
+    {
+      "k": 4,
+      "states": 1,
+      "discount": "1/8",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "21/1024",
+      "cdf_margin": "1/64",
+      "true_reward_gap": "85/1024",
+      "true_reward_gap_lower_bound": "85/1024",
+      "frozen_bad_policy_loss": "85/896",
+      "local_phase_radius": "21/4096",
+      "two_step_contraction": "1/64"
+    },
+    {
+      "k": 5,
+      "states": 1,
+      "discount": "1/10",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "9/500",
+      "cdf_margin": "1/100",
+      "true_reward_gap": "17/250",
+      "true_reward_gap_lower_bound": "17/250",
+      "frozen_bad_policy_loss": "17/225",
+      "local_phase_radius": "9/2000",
+      "two_step_contraction": "1/100"
+    },
+    {
+      "k": 6,
+      "states": 1,
+      "discount": "1/12",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "55/3456",
+      "cdf_margin": "1/144",
+      "true_reward_gap": "199/3456",
+      "true_reward_gap_lower_bound": "199/3456",
+      "frozen_bad_policy_loss": "199/3168",
+      "local_phase_radius": "55/13824",
+      "two_step_contraction": "1/144"
+    },
+    {
+      "k": 7,
+      "states": 1,
+      "discount": "1/14",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "39/2744",
+      "cdf_margin": "1/196",
+      "true_reward_gap": "137/2744",
+      "true_reward_gap_lower_bound": "137/2744",
+      "frozen_bad_policy_loss": "137/2548",
+      "local_phase_radius": "39/10976",
+      "two_step_contraction": "1/196"
+    },
+    {
+      "k": 8,
+      "states": 1,
+      "discount": "1/16",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "105/8192",
+      "cdf_margin": "1/256",
+      "true_reward_gap": "361/8192",
+      "true_reward_gap_lower_bound": "361/8192",
+      "frozen_bad_policy_loss": "361/7680",
+      "local_phase_radius": "105/32768",
+      "two_step_contraction": "1/256"
+    },
+    {
+      "k": 9,
+      "states": 1,
+      "discount": "1/18",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "17/1458",
+      "cdf_margin": "1/324",
+      "true_reward_gap": "115/2916",
+      "true_reward_gap_lower_bound": "115/2916",
+      "frozen_bad_policy_loss": "115/2754",
+      "local_phase_radius": "17/5832",
+      "two_step_contraction": "1/324"
+    },
+    {
+      "k": 10,
+      "states": 1,
+      "discount": "1/20",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "171/16000",
+      "cdf_margin": "1/400",
+      "true_reward_gap": "571/16000",
+      "true_reward_gap_lower_bound": "571/16000",
+      "frozen_bad_policy_loss": "571/15200",
+      "local_phase_radius": "171/64000",
+      "two_step_contraction": "1/400"
+    },
+    {
+      "k": 11,
+      "states": 1,
+      "discount": "1/22",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "105/10648",
+      "cdf_margin": "1/484",
+      "true_reward_gap": "347/10648",
+      "true_reward_gap_lower_bound": "347/10648",
+      "frozen_bad_policy_loss": "347/10164",
+      "local_phase_radius": "105/42592",
+      "two_step_contraction": "1/484"
+    },
+    {
+      "k": 12,
+      "states": 1,
+      "discount": "1/24",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "253/27648",
+      "cdf_margin": "1/576",
+      "true_reward_gap": "829/27648",
+      "true_reward_gap_lower_bound": "829/27648",
+      "frozen_bad_policy_loss": "829/26496",
+      "local_phase_radius": "253/110592",
+      "two_step_contraction": "1/576"
+    },
+    {
+      "k": 13,
+      "states": 1,
+      "discount": "1/26",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "75/8788",
+      "cdf_margin": "1/676",
+      "true_reward_gap": "61/2197",
+      "true_reward_gap_lower_bound": "61/2197",
+      "frozen_bad_policy_loss": "122/4225",
+      "local_phase_radius": "75/35152",
+      "two_step_contraction": "1/676"
+    },
+    {
+      "k": 14,
+      "states": 1,
+      "discount": "1/28",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "351/43904",
+      "cdf_margin": "1/784",
+      "true_reward_gap": "1135/43904",
+      "true_reward_gap_lower_bound": "1135/43904",
+      "frozen_bad_policy_loss": "1135/42336",
+      "local_phase_radius": "351/175616",
+      "two_step_contraction": "1/784"
+    },
+    {
+      "k": 15,
+      "states": 1,
+      "discount": "1/30",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "203/27000",
+      "cdf_margin": "1/900",
+      "true_reward_gap": "653/27000",
+      "true_reward_gap_lower_bound": "653/27000",
+      "frozen_bad_policy_loss": "653/26100",
+      "local_phase_radius": "203/108000",
+      "two_step_contraction": "1/900"
+    },
+    {
+      "k": 16,
+      "states": 1,
+      "discount": "1/32",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "465/65536",
+      "cdf_margin": "1/1024",
+      "true_reward_gap": "1489/65536",
+      "true_reward_gap_lower_bound": "1489/65536",
+      "frozen_bad_policy_loss": "1489/63488",
+      "local_phase_radius": "465/262144",
+      "two_step_contraction": "1/1024"
+    },
+    {
+      "k": 32,
+      "states": 1,
+      "discount": "1/64",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "1953/524288",
+      "cdf_margin": "1/4096",
+      "true_reward_gap": "6049/524288",
+      "true_reward_gap_lower_bound": "6049/524288",
+      "frozen_bad_policy_loss": "6049/516096",
+      "local_phase_radius": "1953/2097152",
+      "two_step_contraction": "1/4096"
+    },
+    {
+      "k": 64,
+      "states": 1,
+      "discount": "1/128",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "8001/4194304",
+      "cdf_margin": "1/16384",
+      "true_reward_gap": "24385/4194304",
+      "true_reward_gap_lower_bound": "24385/4194304",
+      "frozen_bad_policy_loss": "24385/4161536",
+      "local_phase_radius": "8001/16777216",
+      "two_step_contraction": "1/16384"
+    },
+    {
+      "k": 128,
+      "states": 1,
+      "discount": "1/256",
+      "exact_period": 2,
+      "exact_closure": true,
+      "greedy_word": [
+        0,
+        1
+      ],
+      "greedy_gap": "32385/33554432",
+      "cdf_margin": "1/65536",
+      "true_reward_gap": "97921/33554432",
+      "true_reward_gap_lower_bound": "97921/33554432",
+      "frozen_bad_policy_loss": "97921/33423360",
+      "local_phase_radius": "32385/134217728",
+      "two_step_contraction": "1/65536"
+    }
+  ],
+  "fixed_discount": [
+    {
+      "k": 2,
+      "states": 14,
+      "discount": "9/10",
+      "effective_discount": "22876792454961/100000000000000",
+      "exact_period": 28,
+      "all_primitive_backups_verified": true,
+      "all_phases_distinct": true,
+      "greedy_word_runs": [
+        [
+          0,
+          14
+        ],
+        [
+          1,
+          14
+        ]
+      ],
+      "greedy_gap": "1764331612468739462786488479/80000000000000000000000000000",
+      "cdf_margin": "1/16",
+      "true_reward_gap": "12188973121476539462786488479/80000000000000000000000000000",
+      "frozen_bad_policy_loss": "12188973121476539462786488479/61698566036031200000000000000",
+      "local_phase_radius": "1764331612468739462786488479/320000000000000000000000000000",
+      "full_period_contraction": "523347633027360537213511521/10000000000000000000000000000"
+    },
+    {
+      "k": 3,
+      "states": 18,
+      "discount": "9/10",
+      "effective_discount": "150094635296999121/1000000000000000000",
+      "exact_period": 36,
+      "all_primitive_backups_verified": true,
+      "all_phases_distinct": true,
+      "greedy_word_runs": [
+        [
+          0,
+          18
+        ],
+        [
+          1,
+          18
+        ]
+      ],
+      "greedy_gap": "42522078584019982196053284041742453/2000000000000000000000000000000000000",
+      "cdf_margin": "1/36",
+      "true_reward_gap": "1982130895474185113764479556375682077/18000000000000000000000000000000000000",
+      "frozen_bad_policy_loss": "283161556496312159109211365196526011/2185470937807716546000000000000000000",
+      "local_phase_radius": "42522078584019982196053284041742453/8000000000000000000000000000000000000",
+      "full_period_contraction": "22528399544939174411840147874772641/1000000000000000000000000000000000000"
+    },
+    {
+      "k": 8,
+      "states": 27,
+      "discount": "9/10",
+      "effective_discount": "58149737003040059690390169/1000000000000000000000000000",
+      "exact_period": 54,
+      "all_primitive_backups_verified": true,
+      "all_phases_distinct": true,
+      "greedy_word_runs": [
+        [
+          0,
+          27
+        ],
+        [
+          1,
+          27
+        ]
+      ],
+      "greedy_gap": "383378415626621333432219632693254311808610307837060073/32000000000000000000000000000000000000000000000000000000",
+      "cdf_margin": "1/256",
+      "true_reward_gap": "1444282097584060497766757266693254311808610307837060073/32000000000000000000000000000000000000000000000000000000",
+      "frozen_bad_policy_loss": "1444282097584060497766757266693254311808610307837060073/30139208415902718089907514592000000000000000000000000000",
+      "local_phase_radius": "383378415626621333432219632693254311808610307837060073/128000000000000000000000000000000000000000000000000000000",
+      "full_period_contraction": "3381391913522726342930221472392241170198527451848561/1000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "k": 16,
+      "states": 33,
+      "discount": "9/10",
+      "effective_discount": "30903154382632612361920641803529/1000000000000000000000000000000000",
+      "exact_period": 66,
+      "all_primitive_backups_verified": true,
+      "all_phases_distinct": true,
+      "greedy_word_runs": [
+        [
+          0,
+          33
+        ],
+        [
+          1,
+          33
+        ]
+      ],
+      "greedy_gap": "89844448295507361375082353305263757964240194583076970610489438477/12800000000000000000000000000000000000000000000000000000000000000000",
+      "cdf_margin": "1/1024",
+      "true_reward_gap": "291925521999711687203558502484089757964240194583076970610489438477/12800000000000000000000000000000000000000000000000000000000000000000",
+      "frozen_bad_policy_loss": "291925521999711687203558502484089757964240194583076970610489438477/12404439623902302561767415784914828800000000000000000000000000000000",
+      "local_phase_radius": "89844448295507361375082353305263757964240194583076970610489438477/51200000000000000000000000000000000000000000000000000000000000000000",
+      "full_period_contraction": "955004950796825236893190701774414011919935138974343129836853841/1000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "k": 32,
+      "states": 40,
+      "discount": "9/10",
+      "effective_discount": "147808829414345923316083210206383297601/10000000000000000000000000000000000000000",
+      "exact_period": 80,
+      "all_primitive_backups_verified": true,
+      "all_phases_distinct": true,
+      "greedy_word_runs": [
+        [
+          0,
+          40
+        ],
+        [
+          1,
+          40
+        ]
+      ],
+      "greedy_gap": "45143466166809220636634644812386124966890421446747704691694802457591449096988769/12800000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "cdf_margin": "1/4096",
+      "true_reward_gap": "150376991929914748180663054484428480454270421446747704691694802457591449096988769/12800000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "frozen_bad_policy_loss": "150376991929914748180663054484428480454270421446747704691694802457591449096988769/12610804698349637218155413490935829379070720000000000000000000000000000000000000000",
+      "local_phase_radius": "45143466166809220636634644812386124966890421446747704691694802457591449096988769/51200000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "full_period_contraction": "21847450052839212624230656502990235142567050104912751880812823948662932355201/100000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "scope": "Finite exact checks support the separately proved analytic family; not a practical learning experiment.",
+  "python": "3.14.7",
+  "source_sha256": "77d77bad1fd082a0b5e266a9049b25ff881cb64475670cc0d3b4fec173d6dfd9",
+  "construction_sha256": "13c8b3de89165b501bf26cfbe26aaf962a510e2d9cc51469a2d25e7a40eb6218",
+  "wall_seconds": 4.682926099994802
+}
