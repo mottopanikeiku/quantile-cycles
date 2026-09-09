@@ -1,0 +1,18 @@
+{
+  "comparator": "known scalar-control / distributional-evaluation separation",
+  "iterations": 600,
+  "tail_policy_switches": 0,
+  "policy": [
+    0,
+    0,
+    1
+  ],
+  "values": [
+    0.6000000000000003,
+    4.440892098500626e-16,
+    2.220446049250313e-16
+  ],
+  "scalar_residual": 0.0,
+  "distribution_residual": 0.0,
+  "extra_scalar_entries": 6
+}

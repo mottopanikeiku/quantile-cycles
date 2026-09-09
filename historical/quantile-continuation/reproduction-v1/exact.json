@@ -1,0 +1,200 @@
+[
+  {
+    "k": 3,
+    "alpha": 1.0,
+    "period": 6,
+    "residual": 0.0,
+    "strict_policy_cycle": true,
+    "min_action_gap": 0.010545799999999161,
+    "tail_policy_codes": [
+      1,
+      3
+    ],
+    "tail_mean_regret": 0.7369115259740266,
+    "last_policy_code": 1
+  },
+  {
+    "k": 3,
+    "alpha": 0.5,
+    "period": 26,
+    "residual": 0.0,
+    "strict_policy_cycle": true,
+    "min_action_gap": 0.00013895463567692445,
+    "tail_policy_codes": [
+      1,
+      3
+    ],
+    "tail_mean_regret": 0.5115032944996183,
+    "last_policy_code": 1
+  },
+  {
+    "k": 3,
+    "alpha": 0.1,
+    "period": 127,
+    "residual": 7.105427357601002e-15,
+    "strict_policy_cycle": false,
+    "min_action_gap": 6.708476307792921e-06,
+    "tail_policy_codes": [
+      1,
+      3
+    ],
+    "tail_mean_regret": 0.3467818945760125,
+    "last_policy_code": 1
+  },
+  {
+    "k": 8,
+    "alpha": 1.0,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.36840702731157027,
+    "tail_policy_codes": [
+      0
+    ],
+    "tail_mean_regret": 0.27360000000000045,
+    "last_policy_code": 0
+  },
+  {
+    "k": 8,
+    "alpha": 0.5,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.3684070273115687,
+    "tail_policy_codes": [
+      0
+    ],
+    "tail_mean_regret": 0.27360000000000045,
+    "last_policy_code": 0
+  },
+  {
+    "k": 8,
+    "alpha": 0.1,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.36840702731156405,
+    "tail_policy_codes": [
+      0
+    ],
+    "tail_mean_regret": 0.27360000000000045,
+    "last_policy_code": 0
+  },
+  {
+    "k": 16,
+    "alpha": 1.0,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.015504131173227464,
+    "tail_policy_codes": [
+      0
+    ],
+    "tail_mean_regret": 0.27360000000000045,
+    "last_policy_code": 0
+  },
+  {
+    "k": 16,
+    "alpha": 0.5,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.015504131173227131,
+    "tail_policy_codes": [
+      0
+    ],
+    "tail_mean_regret": 0.27360000000000045,
+    "last_policy_code": 0
+  },
+  {
+    "k": 16,
+    "alpha": 0.1,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.015504131173223468,
+    "tail_policy_codes": [
+      0
+    ],
+    "tail_mean_regret": 0.27360000000000045,
+    "last_policy_code": 0
+  },
+  {
+    "k": 32,
+    "alpha": 1.0,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.037509703579421405,
+    "tail_policy_codes": [
+      1
+    ],
+    "tail_mean_regret": 0.0,
+    "last_policy_code": 1
+  },
+  {
+    "k": 32,
+    "alpha": 0.5,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.03750970357942085,
+    "tail_policy_codes": [
+      1
+    ],
+    "tail_mean_regret": 0.0,
+    "last_policy_code": 1
+  },
+  {
+    "k": 32,
+    "alpha": 0.1,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.03750970357941785,
+    "tail_policy_codes": [
+      1
+    ],
+    "tail_mean_regret": 0.0,
+    "last_policy_code": 1
+  },
+  {
+    "k": 64,
+    "alpha": 1.0,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.04894242742291505,
+    "tail_policy_codes": [
+      1
+    ],
+    "tail_mean_regret": 0.0,
+    "last_policy_code": 1
+  },
+  {
+    "k": 64,
+    "alpha": 0.5,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.048942427422914714,
+    "tail_policy_codes": [
+      1
+    ],
+    "tail_mean_regret": 0.0,
+    "last_policy_code": 1
+  },
+  {
+    "k": 64,
+    "alpha": 0.1,
+    "period": 1,
+    "residual": 0.0,
+    "strict_policy_cycle": false,
+    "min_action_gap": 0.04894242742291455,
+    "tail_policy_codes": [
+      1
+    ],
+    "tail_mean_regret": 0.0,
+    "last_policy_code": 1
+  }
+]

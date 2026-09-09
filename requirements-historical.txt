@@ -1,0 +1,2 @@
+# Only the preserved initial search and sampled-learning continuation need NumPy.
+numpy==2.3.5

@@ -1,0 +1,16 @@
+{
+  "fixed": "transition destinations, gamma=9/10, K=3, midpoint levels, uniform atom weights",
+  "minimum_phase_sup_separation": "1635243957/2466100000",
+  "phase_radius": "52729/20000000",
+  "cdf_margin": "1/30",
+  "max_probability_sensitivity": "1",
+  "operator_probability_invariance_radius_strict": "1/30",
+  "reward_cycle_bound_strict": "52729/200000000",
+  "explicit_open_box": {
+    "reward_sup_perturbation_lt": "1/10000",
+    "per_action_outcome_probability_perturbation_lt": "1/2000"
+  },
+  "orbit_displacement_bound": "1/1000",
+  "perturbed_true_optimal_gap_lower_bound": "3/125",
+  "all_exact_inequalities_verified": true
+}
