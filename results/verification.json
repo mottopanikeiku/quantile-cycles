@@ -1,0 +1,25 @@
+{
+  "status": "verified",
+  "one_state_instances": 18,
+  "fixed_discount_instances": 5,
+  "zero_start_instances": 18,
+  "fixed_discount_periods": [28, 36, 54, 66, 80],
+  "comparison": "Exact JSON equality, excluding certificate runtime and Python version.",
+  "source_hashes_matched": true,
+  "scope": "Finite certificate reproduction, not a machine-checked universal proof.",
+  "historical": {
+    "original_period": 6,
+    "damped_period": 26,
+    "robustness_inequalities_verified": true,
+    "sampled_artifacts": {
+      "status": "verified",
+      "semantic_reproduction_identical": true,
+      "hashed_files": 32,
+      "array_members_compared": 41,
+      "json_files_compared": 3,
+      "exact_policy_values_verified": 8,
+      "sampled_endpoints_recomputed": 12
+    },
+    "scope": "Rechecks stored runs and recomputes endpoints; does not rerun training."
+  }
+}

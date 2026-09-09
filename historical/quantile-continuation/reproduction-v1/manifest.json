@@ -1,0 +1,100 @@
+{
+  "python": "3.14.7",
+  "numpy": "2.3.5",
+  "platform": "Linux-7.1.13-200.fc44.x86_64-x86_64-with-glibc2.43",
+  "sha256": {
+    "run.py": "ea8b4f7d9079ac38031e2113cc7c0b01d5e23bb16880cdfcec71a19fce1e1ec8",
+    "protocol.md": "b19caec12f947bc9ea871422e7fab178d670fb8d7907d3a05f081bf5f0cd307b",
+    "quantile-cycle-result.json": "a234306e5b0648ebcf9233410be13ef563fd5c264a2f459a709dec2ddbd50f3b"
+  },
+  "outcome_bank_sha256": "96901972abfec20c9ec92d889c17bf4082937aa92b1258b516d5659b333b95ba",
+  "target_uniform_bank_sha256": "3b40ed98b3152d6e37248ef36ba47efe0f2b45878d0ca98020839ffb69eb4f61",
+  "unique_sampled_transitions": 30720000,
+  "quantile_training_transition_consumptions": 368640000,
+  "scalar_training_transition_consumptions": 61440000,
+  "seed_labels": [
+    7100,
+    7101,
+    7102,
+    7103,
+    7104,
+    7105,
+    7106,
+    7107,
+    7108,
+    7109,
+    7110,
+    7111,
+    7112,
+    7113,
+    7114,
+    7115
+  ],
+  "policy_code_values": [
+    [
+      0.3264000000000003,
+      -0.27359999999999945,
+      -0.34959999999999986
+    ],
+    [
+      0.6000000000000008,
+      1.0449157878825007e-15,
+      7.183796041692193e-16
+    ],
+    [
+      -2.0883116883116912,
+      -3.38701298701299,
+      -2.3870129870129904
+    ],
+    [
+      -3.838808250572959,
+      -5.137509549274258,
+      -4.623758594346832
+    ],
+    [
+      -5.165867689357627,
+      -3.9002876318312607,
+      -4.9837008628955
+    ],
+    [
+      -1.8749999999999991,
+      1.0449157878825007e-15,
+      7.183796041692193e-16
+    ],
+    [
+      -11.267796610169503,
+      -11.13220338983052,
+      -10.132203389830522
+    ],
+    [
+      -11.111741349971648,
+      -10.947249007373804,
+      -9.852524106636423
+    ]
+  ],
+  "checks": {
+    "pinball": 2.9047486638233977e-11,
+    "huber": 5.410294434682328e-11,
+    "observed_outcome_zero_frequency": 0.40005283203125
+  },
+  "practical_gate_passing_cells": [],
+  "wall_seconds": 25.607096202998946,
+  "output_sha256": {
+    "exact.json": "8a4f951fc427f135bde4265011cc1f2c1114ce5bfc54f35b143fcafa313a85ea",
+    "exact_traces.npz": "2d2c5384ef1492159b97c78fa83ca2cebda3d59211c96124873f89887e15b491",
+    "final_k16_huber_constant.npy": "20735ad2968ef6cdb9a003c531f07c566a510028918ba3b49e81de7b97d98864",
+    "final_k16_huber_decaying.npy": "d69ff47876a4dba76bfe8af58ba97fed51e1fc67cef55f37323e5bde9e1da0df",
+    "final_k16_pinball_constant.npy": "17522b5e32e43a82dde595dea7ed3f6adbe1f0d21bc9e77494d31dca7692679e",
+    "final_k16_pinball_decaying.npy": "14280ad036d7d728761916c51961e542c6a7a357fc705dd816beef455757ddc4",
+    "final_k32_huber_constant.npy": "39dd18460e9b2ea50789529c7595477c167d7d73988745de0ac12a8d2dfb1773",
+    "final_k32_huber_decaying.npy": "55e70d390fc95d1f24167d82105795ee997e038c2095747303cb0f106ff79f84",
+    "final_k32_pinball_constant.npy": "6c506ca6f580b56278c4cb1b4c523d07bdc4cdc8c0fbfc0ca035b1dd8ad78bf0",
+    "final_k32_pinball_decaying.npy": "2ef664584128e3fbd1a47cb4479cdbd3dcef32249d85f8b0ca49262fb829865b",
+    "final_k3_huber_constant.npy": "5b3cbca8651dcf1042a58a301c65253b0f7bde42dc5edb72cb16b34444997692",
+    "final_k3_huber_decaying.npy": "7e9f32e0812436295a046df862a5dc12e35a1970acf9546fde76312803146d59",
+    "final_k3_pinball_constant.npy": "e37b508c92f77f9074a1a352ca8210114aed7ed81245c6da44f9a2b5fea8e6b6",
+    "final_k3_pinball_decaying.npy": "aea69c7cc45c7d04c680caa4885834f2344331053d4afe037ceec4ae5947cf91",
+    "sampled.json": "d02331b70c2d6cbcb4f20ff029bc6160a4e2167834603eddef39c7da5d716b9d",
+    "sampled_policy_traces.npz": "9cba7e712b6974045d2b5a3d59993d665c4ef76c6bcaf2c68436cae898468284"
+  }
+}

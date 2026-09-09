@@ -1,0 +1,9 @@
+{
+  "status": "verified",
+  "semantic_reproduction_identical": true,
+  "hashed_files": 32,
+  "array_members_compared": 41,
+  "json_files_compared": 3,
+  "exact_policy_values_verified": 8,
+  "sampled_endpoints_recomputed": 12
+}
