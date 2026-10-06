@@ -65,9 +65,9 @@ checking definitions but must not be presented as the general theorem.
 
 Completion means Lean checks the actual quantified statements with no `sorry`,
 extra mathematical axioms or assumed cycle identities. Keep Python certificates
-as independently executable examples. Use free local CPU builds, a pinned
-Lean/Mathlib toolchain and cached dependencies; on the shared machine, run
-builds through `pp-run heavy` with its memory cap. No paid compute is needed.
+as independently executable examples. Use free local CPU builds at low
+priority (`nice -n 19`), a pinned Lean/Mathlib toolchain and cached
+dependencies. No paid compute is needed.
 
 ## Sampled QR-DQN: a bounded, falsifiable experiment
 
@@ -122,8 +122,8 @@ must report its own negative results without retuning the MDP to rescue them.
 
 Estimated implementation/review: 3–5 days for the tabular study and another
 2–3 days for the small replay/network comparison. CPU runtime is **not yet
-measured**. Run a pilot first, record throughput via `pp-run bench`, and split
-full work into `pp-run heavy` jobs capped below two hours and 1,400 MB each.
+measured**. Run a pilot first, record throughput, and split the full work
+into jobs of under two hours and 1,400 MB each.
 Reduce the batch of seeds per job rather than silently dropping seeds or
 raising the memory limit. Budget: $0 paid compute. If Huber removes the effect
 in the population or tabular stage, publish that answer and stop before the
