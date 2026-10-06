@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-06 — Make the construction easier to inspect
+
+- Rewrote the README around the exact result and the dependency-free verifier.
+- Added a reproducible SVG of the smallest cycle, including projected atoms,
+  greedy means, optimal-continuation action values and stationary-policy values.
+- Added the fixed-discount states/period table from the existing certificates.
+- Added CPU GitHub Actions verification and a generated-figure consistency check.
+- Moved the earlier handoff record to `docs/HANDOFF.md`; preserved certificates,
+  checker sources and historical experiments unchanged.
+- Added `docs/NEXT.md` with a Lean 4 lemma plan and a bounded sampled-learning
+  experiment. Neither formalization nor new training was attempted.
+
 ## 2026-09-09 — Initial research artifact
 
 - Added the explicit arbitrary-K>=2 one-state strict two-cycle construction, global attraction modulo phase, and no-fixed-point consequence.
