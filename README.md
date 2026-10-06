@@ -1,91 +1,65 @@
 # Quantile Cycles
 
-**Finite midpoint-quantile control can have no fixed point—even with a unique optimal policy and no ties on its attracting orbit.**
+An exact counterexample to convergence of mean-greedy, hard quantile-projected Bellman control in distributional reinforcement learning.
 
-This repository gives an explicit discounted MDP family and exact rational certificates for the ordinary **mean-greedy, hard quantile-projected Bellman control operator**. It is a theorem artifact, not a new learning algorithm or a practical QR-DQN failure claim.
+**Question:** can a finite quantile critic keep changing its greedy action forever, even when the MDP has a unique optimal policy?
 
-Author: **mottopanikeiku** · License: **MIT** · Status: research note, not externally peer-reviewed; priority unestablished.
+I constructed a one-state, two-action discounted MDP family and proved that its projected control operator has an attracting two-cycle and no fixed point. [`THEOREM.md`](THEOREM.md) contains the construction and proof; [`certify.py`](certify.py) checks finite instances with exact rational arithmetic. [`verify.py`](verify.py) reproduces the stored certificates, including their source hashes.
 
-## Result
-
-For every integer **K>=2**, construct a **one-state, two-action** MDP with rewards in **[0,1]** and discount `0 < beta <= 1/(2K)`:
-
-- The projected control operator has an exact **two-cycle**, with unique quantiles and strictly alternating greedy actions.
-- One action is uniquely optimal for expected return. The other cycle phase selects the genuinely suboptimal action.
-- Every finite initial atom table converges to the cycle **modulo phase**, regardless of transient greedy tie choices. Consequently, the operator has **no fixed point**.
-- For any prescribed **0<gamma<1**, a deterministic delay chain gives a finite-state example with exact primitive period **2L**, where `L = ceil(log(2K)/(-log gamma))`. This embedded cycle is locally attracting and its operator also has no fixed point.
-- **K=1 is different:** the canonical single-atom operator is a contraction for discount below one, although its fixed point need not optimize expected return.
-
-Read the [complete construction and proof](THEOREM.md). The quantifier is **for each K, a corresponding MDP**, not one fixed MDP failing at every capacity. The reward distribution depends on K, has K+1 outcomes, and the bad-policy loss shrinks with K. Holding the primitive discount fixed increases the number of states.
-
-## Smallest explicit example
-
-Use K=2, discount 1/4, and two self-looping actions:
-
-| Action | Reward law |
-|---|---|
-| A | Always 91/128 |
-| B | 0, 1/2, 1 with probabilities 3/16, 1/2, 5/16 |
-
-The exact projected critic alternates between:
-
-| Phase | A atoms | B atoms | Greedy action |
-|---|---|---|---|
-| Q_A | (107/120, 61/60) | (1307/1920, 2267/1920) | A |
-| Q_B | (1793/1920, 1853/1920) | (347/480, 587/480) | B |
-
-Both approximate greedy gaps are **3/128**. A's true mean-reward advantage is **19/128**; freezing the B policy loses **19/96** in discounted value. Backup closure is rational equality, not a tolerance-based recurrence detector.
+**Result:** yes, for every quantile count **K ≥ 2**, with a corresponding MDP. One cycle phase strictly chooses the genuinely suboptimal action; no greedy tie is needed on the cycle. This is a theorem about an exact operator, not an observed QR-DQN training failure.
 
 ## Reproduce
 
-The current theorem checkers use only the Python standard library. Python 3.11+ is recommended. Run from the repository root:
+From the repository root, the first check is:
 
 ```sh
 python -B verify.py
 ```
 
-This re-executes the checkers and compares their complete JSON certificates, including source hashes. Only elapsed time and Python version are excluded from equality. It checks:
+Python 3.11+ and its standard library are enough: no installation, GPU, dataset or paid compute. A laptop CPU suffices. The verifier checks [18 one-state instances, five fixed-discount instances and 18 zero-start trajectories](results/verification.json); comparison is exact JSON equality apart from runtime and Python-version metadata. These finite checks support, but do not replace, the general proof.
 
-- **18 one-state instances:** K=2 through 16, then 32, 64, 128;
-- **5 fixed-discount instances:** gamma=9/10 and K=2,3,8,16,32;
-- **18 zero-start trajectories:** six exact updates each, including the analytic translation formula.
-
-The fixed-discount instances have **14,18,27,33,40 states** and fundamental periods **28,36,54,66,80**, respectively. Every primitive state backup is checked, rather than only treating the delay chain as a macro-step.
-
-Individual outputs:
+Regenerate the figure with:
 
 ```sh
-python -B certify.py
-python -B zero_initialization.py
+python -B tools/render_cycle.py
 ```
 
-Finite certificates corroborate the proof. They do **not** prove the all-K or all-initializations statements by enumeration.
+Push and pull-request CI runs the verifier and checks that the committed SVG matches its generator.
 
-### Preserved earlier experiments
+## The smallest cycle
 
-The earlier three-state K=3 search, exact six-cycle, damped period-26 certificate, robustness bounds, and sampled tabular continuation are retained under [`historical/`](historical/README.md). The sampled continuation **failed its larger-critic practical gate**. Those results are not evidence that this new analytic family causes sampled or deep-learning failure.
+![Two exact critic phases: quantile atoms and their means make the greedy action flip from A to B and back, although true expected values favor A.](docs/two-phase-cycle.svg)
 
-To verify the preserved artifacts as well:
+The figure is generated directly from [`family(2, Fraction(1, 4))`](certify.py), with both Bellman backups checked by the [drawing script](tools/render_cycle.py). Circles are projected quantiles; diamonds are their arithmetic means. These are exact constructed values, not sampled measurements.
 
-```sh
-python -m venv .venv
-.venv/bin/python -m pip install -r requirements-historical.txt
-.venv/bin/python -B verify.py --historical
-```
+For **K = 2**, discount **1/4**, action A always pays **91/128**. B pays **0, 1/2, 1** with probabilities **3/16, 1/2, 5/16** ([construction](THEOREM.md#6-a-smallest-explicit-example)). Both projected greedy gaps are **3/128**, but A's true mean-reward advantage is **19/128**. Always taking B loses **19/96** in discounted value ([certificate](results/certificates.json)). The figure distinguishes optimal-continuation action values from the values of always taking each action.
 
-This reruns historical certificates, checks stored file hashes and deterministic reproduction, and recomputes sampled endpoints from policy traces. It does **not** retrain the sampled experiments; the historical page provides that separate command.
+## General statement
 
-## Reading map
+For every integer **K ≥ 2** and **0 < β ≤ 1/(2K)**, the constructed one-state MDP has rewards in **[0,1]**, unique quantiles on its exact two-cycle, and strict alternating greedy choices. Every finite real initial atom table converges to that cycle **modulo phase**, regardless of transient greedy tie choices. Thus the operator has **no fixed point**.
 
-- [`THEOREM.md`](THEOREM.md): final theorem, proof, K=1 boundary, global attraction, fixed-discount embedding, and limits.
-- [`PRIOR_ART.md`](PRIOR_ART.md): closest established results and what this construction does—and does not—add.
-- [`HANDOFF.md`](HANDOFF.md): claim ledger, research graph, completed loops, and prerequisites for further work.
-- [`results/`](results/): source-bound exact certificates and repository verification output.
-- [`construction.md`](construction.md): frozen initial derivation used by the certificate hash. It is not the final theorem; the final note incorporates review clarifications and later global-attraction reasoning.
-- [`historical/quantile-continuation/REPORT.md`](historical/quantile-continuation/REPORT.md): the earlier frozen practical gate and its negative outcome.
+For any prescribed **0 < γ < 1**, a deterministic delay chain gives **L states** and a locally attracting cycle of primitive period **2L**, where **L = ceil(log(2K)/(−log γ))**. Its operator also has no fixed point. Unlike the one-state result, this does not assert global convergence to one common phase alignment.
 
-## Scope and attribution
+At **γ = 9/10**, the [stored fixed-discount certificates](results/certificates.json) check every primitive state backup:
 
-Known work already establishes finite-quantile mean errors, strictly suboptimal projected choices for arbitrary K, and distributional control cycles involving optimal-action ties. The candidate contribution is the **specific conjunction** of arbitrary K>=2, strict suboptimal cycling, unique orbit quantiles, one-state global attraction, and fixed-discount embedding. A targeted primary-source review did not identify that exact conjunction; **absence from that search is not a priority proof**.
+| Quantiles K | States L | Exact period 2L |
+|---:|---:|---:|
+| 2 | 14 | 28 |
+| 3 | 18 | 36 |
+| 8 | 27 | 54 |
+| 16 | 33 | 66 |
+| 32 | 40 | 80 |
 
-The operator here computes exact hard midpoint quantiles and then greedifies by their arithmetic mean. It is not a risk-sensitive quantile objective, Huber update, stochastic approximation algorithm, or deep network. No practical algorithmic advantage, capacity-independent loss, or external peer-review acceptance is claimed.
+## Limitations and next steps
+
+- The MDP and reward law depend on K; the suboptimal-policy loss shrinks with K. This is not one MDP failing at every capacity.
+- Hard midpoint projection is not pinball/Huber SGD, replay, target networks or deep QR-DQN.
+- Earlier sampled experiments on a **different** witness failed their larger-critic practical criterion; [the historical record](historical/README.md) is retained unchanged.
+- At **K = 1**, the discounted single-atom operator is a contraction, though its fixed point need not optimize expected return ([proof](THEOREM.md#8-why-k1-is-different)).
+- The proof is not Lean-checked or externally peer-reviewed; priority is unestablished. [Next steps](docs/NEXT.md) specify formalization and sampled-learning work. [Supporting records](docs/HANDOFF.md) retain the earlier decisions and verification detail.
+
+## Prior work
+
+This builds on [Dabney et al.'s quantile projection](https://arxiv.org/abs/1710.10044), [Rowland et al.'s finite-quantile suboptimality examples](https://proceedings.mlr.press/v97/rowland19a.html), and [distributional control nonconvergence examples](https://www.distributional-rl.org/contents/chapter7). The proposed distinction is strict suboptimal cycling with one-state global attraction, not distributional nonconvergence itself. [`PRIOR_ART.md`](PRIOR_ART.md) gives the comparison and attribution.
+
+Written with AI coding assistance.
