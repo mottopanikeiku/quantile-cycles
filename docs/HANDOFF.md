@@ -1,5 +1,8 @@
 # Research handoff
 
+This preserved record describes the original work. File paths below are relative
+to the repository root; the current forward plan is in [NEXT.md](NEXT.md).
+
 ## Current decision
 
 Retain this as a self-contained theorem artifact, **not a new RL algorithm project**. The final result is the explicit arbitrary-K strict-cycle family in `THEOREM.md`. The earlier sampled-learning practical gate failed and remains failed. External peer review, theoretical priority, and practical relevance are unestablished.

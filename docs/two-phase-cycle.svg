@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 690" role="img" aria-labelledby="title description">
+<title id="title">An exact two-phase quantile-control cycle</title>
+<desc id="description">One state, two actions, two quantiles, discount one quarter. The projected means select A in Q_A and B in Q_B. Exact Bellman backups swap these phases. True expected returns favor A in both phases.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#334155"/></marker></defs>
+<style>text{font-family:DejaVu Sans,Arial,sans-serif;fill:#172033}.small{font-size:15px}.body{font-size:18px}.heading{font-size:23px;font-weight:700}.axis{stroke:#cbd5e1;stroke-width:1}.arrow{fill:none;stroke:#334155;stroke-width:2;marker-end:url(#arrow)}</style>
+<rect width="1000" height="690" fill="#fff"/>
+<text x="32" y="39" class="heading" text-anchor="start">Exact two-cycle; true values still favor A</text>
+<text x="32" y="68" class="body" text-anchor="start">One environment state · K = 2 · discount = 1/4</text>
+<text x="32" y="96" class="small" text-anchor="start">Rewards: A = 91/128; B = 0 (p=3/16), 1/2 (p=1/2), 1 (p=5/16)</text>
+<rect x="32" y="122" width="442" height="323" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="52" y="158" class="heading" text-anchor="start">Q_A: greedy action A</text>
+<line x1="99.00" y1="180" x2="99.00" y2="335" class="axis"/>
+<text x="99.00" y="362" class="small" text-anchor="middle">1/2</text>
+<line x1="214.33" y1="180" x2="214.33" y2="335" class="axis"/>
+<text x="214.33" y="362" class="small" text-anchor="middle">3/4</text>
+<line x1="329.67" y1="180" x2="329.67" y2="335" class="axis"/>
+<text x="329.67" y="362" class="small" text-anchor="middle">1</text>
+<line x1="445.00" y1="180" x2="445.00" y2="335" class="axis"/>
+<text x="445.00" y="362" class="small" text-anchor="middle">5/4</text>
+<text x="54" y="212" class="body" text-anchor="start">A</text>
+<line x1="99" y1="206" x2="445" y2="206" class="axis"/>
+<circle cx="279.69" cy="206" r="6" fill="#0369a1"/>
+<circle cx="337.36" cy="206" r="6" fill="#0369a1"/>
+<path d="M308.52,196 l7,10 l-7,10 l-7,-10 Z" fill="#0369a1" stroke="#fff" stroke-width="1"/>
+<text x="99" y="237" class="small" text-anchor="start">atoms: 107/120, 61/60</text>
+<text x="54" y="305" class="body" text-anchor="start">B</text>
+<line x1="99" y1="299" x2="445" y2="299" class="axis"/>
+<circle cx="182.38" cy="299" r="6" fill="#b45309"/>
+<circle cx="413.04" cy="299" r="6" fill="#b45309"/>
+<path d="M297.71,289 l7,10 l-7,10 l-7,-10 Z" fill="#b45309" stroke="#fff" stroke-width="1"/>
+<text x="99" y="330" class="small" text-anchor="start">atoms: 1307/1920, 2267/1920</text>
+<text x="52" y="396" class="small" text-anchor="start">Means: A = 229/240; B = 1787/1920</text>
+<text x="52" y="424" class="small" text-anchor="start">Strict greedy gap = 3/128</text>
+<rect x="526" y="122" width="442" height="323" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="546" y="158" class="heading" text-anchor="start">Q_B: greedy action B</text>
+<line x1="593.00" y1="180" x2="593.00" y2="335" class="axis"/>
+<text x="593.00" y="362" class="small" text-anchor="middle">1/2</text>
+<line x1="708.33" y1="180" x2="708.33" y2="335" class="axis"/>
+<text x="708.33" y="362" class="small" text-anchor="middle">3/4</text>
+<line x1="823.67" y1="180" x2="823.67" y2="335" class="axis"/>
+<text x="823.67" y="362" class="small" text-anchor="middle">1</text>
+<line x1="939.00" y1="180" x2="939.00" y2="335" class="axis"/>
+<text x="939.00" y="362" class="small" text-anchor="middle">5/4</text>
+<text x="548" y="212" class="body" text-anchor="start">A</text>
+<line x1="593" y1="206" x2="939" y2="206" class="axis"/>
+<circle cx="793.15" cy="206" r="6" fill="#0369a1"/>
+<circle cx="807.57" cy="206" r="6" fill="#0369a1"/>
+<path d="M800.36,196 l7,10 l-7,10 l-7,-10 Z" fill="#0369a1" stroke="#fff" stroke-width="1"/>
+<text x="593" y="237" class="small" text-anchor="start">atoms: 1793/1920, 1853/1920</text>
+<text x="548" y="305" class="body" text-anchor="start">B</text>
+<line x1="593" y1="299" x2="939" y2="299" class="axis"/>
+<circle cx="695.84" cy="299" r="6" fill="#b45309"/>
+<circle cx="926.51" cy="299" r="6" fill="#b45309"/>
+<path d="M811.17,289 l7,10 l-7,10 l-7,-10 Z" fill="#b45309" stroke="#fff" stroke-width="1"/>
+<text x="593" y="330" class="small" text-anchor="start">atoms: 347/480, 587/480</text>
+<text x="546" y="396" class="small" text-anchor="start">Means: A = 1823/1920; B = 467/480</text>
+<text x="546" y="424" class="small" text-anchor="start">Strict greedy gap = 3/128</text>
+<path d="M474,151 L521,151" class="arrow"/>
+<path d="M747,447 L747,473 L253,473 L253,449" class="arrow"/>
+<text x="499" y="144" class="small" text-anchor="middle">F</text>
+<text x="499" y="494" class="body" text-anchor="middle">F(Q_A) = Q_B; F(Q_B) = Q_A</text>
+<text x="32" y="526" class="small" text-anchor="start">Circles: midpoint quantiles. Diamonds: means used for greedy control.</text>
+<rect x="32" y="546" width="936" height="120" rx="10" fill="#ecfdf5" stroke="#a7f3d0"/>
+<text x="52" y="577" class="heading" text-anchor="start">True expected values (not projected means)</text>
+<text x="52" y="608" class="body" text-anchor="start">Optimal continuation: Q*(A) = 91/96; Q*(B) = 307/384; gap = 19/128</text>
+<text x="52" y="641" class="body" text-anchor="start">Always A: V = 91/96. Always B: V = 3/4. Stationary-policy loss = 19/96.</text>
+</svg>
