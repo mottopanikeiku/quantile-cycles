@@ -1,0 +1,101 @@
+{
+  "provider": "Modal",
+  "purpose": "Pinned Lean proof compilation and actual axiom output, not a performance benchmark",
+  "runs": [
+    {
+      "id": "quantile-cycles-1791366799035",
+      "time": "2026-10-07T02:53:19",
+      "gpu": "none",
+      "containers": 1,
+      "cores": 2.0,
+      "mem_gib": 2.0,
+      "minutes": 5.0,
+      "booked": 0.0101,
+      "wall_minutes": 0.29,
+      "charged_upper": 0.0006,
+      "exit": 1
+    },
+    {
+      "id": "quantile-cycles-1791366879828",
+      "time": "2026-10-07T02:54:39",
+      "gpu": "none",
+      "containers": 1,
+      "cores": 2.0,
+      "mem_gib": 2.0,
+      "minutes": 5.0,
+      "booked": 0.0101,
+      "wall_minutes": 2.5,
+      "charged_upper": 0.005,
+      "exit": 1
+    },
+    {
+      "id": "quantile-cycles-1791367050714",
+      "time": "2026-10-07T02:57:30",
+      "gpu": "none",
+      "containers": 1,
+      "cores": 2.0,
+      "mem_gib": 2.0,
+      "minutes": 5.0,
+      "booked": 0.0101,
+      "wall_minutes": 0.44,
+      "charged_upper": 0.0009,
+      "exit": 1
+    },
+    {
+      "id": "quantile-cycles-1791367148838",
+      "time": "2026-10-07T02:59:08",
+      "gpu": "none",
+      "containers": 1,
+      "cores": 2.0,
+      "mem_gib": 2.0,
+      "minutes": 5.0,
+      "booked": 0.0101,
+      "wall_minutes": 0.63,
+      "charged_upper": 0.0013,
+      "exit": 0
+    },
+    {
+      "id": "quantile-cycles-1791367419196",
+      "time": "2026-10-07T03:03:39",
+      "gpu": "none",
+      "containers": 1,
+      "cores": 2.0,
+      "mem_gib": 2.0,
+      "minutes": 5.0,
+      "booked": 0.0101,
+      "wall_minutes": 0.98,
+      "charged_upper": 0.002,
+      "exit": 0
+    },
+    {
+      "id": "quantile-cycles-1791367524725",
+      "time": "2026-10-07T03:05:24",
+      "gpu": "none",
+      "containers": 1,
+      "cores": 2.0,
+      "mem_gib": 2.0,
+      "minutes": 5.0,
+      "booked": 0.0101,
+      "wall_minutes": 0.92,
+      "charged_upper": 0.0019,
+      "exit": 1
+    },
+    {
+      "id": "quantile-cycles-1791367619760",
+      "time": "2026-10-07T03:06:59",
+      "gpu": "none",
+      "containers": 1,
+      "cores": 2.0,
+      "mem_gib": 2.0,
+      "minutes": 5.0,
+      "booked": 0.0101,
+      "wall_minutes": 0.99,
+      "charged_upper": 0.002,
+      "exit": 0
+    }
+  ],
+  "ledger_upper_usd": 0.0137,
+  "rounded_up_to_cent_usd": 0.02,
+  "billing_note": "Budget accounting upper estimates include client elapsed time and a 10% margin; they are not invoices or build-speed measurements.",
+  "local_download_note": "An initial 343842845-byte Lean release download was removed; the local dependency update was stopped and its partial tree removed before byte counting. Proof builds used cloud containers only."
+}

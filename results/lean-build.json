@@ -1,0 +1,54 @@
+{
+  "commands": [
+    {
+      "command": [
+        "lake",
+        "exe",
+        "cache",
+        "get",
+        "Mathlib.Data.Rat.Defs",
+        "Mathlib.Tactic.NormNum",
+        "Mathlib.Tactic.Linarith"
+      ],
+      "returncode": 0,
+      "stdout": "No files to download\nDecompressing 701 file(s)\nUnpacked in 157 ms\nCompleted successfully!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "lake",
+        "build"
+      ],
+      "returncode": 0,
+      "stdout": "\u2139 [713/714] Built QuantileCycles\ninfo: ././././QuantileCycles.lean:255:0: '_private.QuantileCycles.0.QuantileCycles.cdf_le_leftCdf' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:256:0: 'QuantileCycles.strictJump_isInverse' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:257:0: 'QuantileCycles.inverse_unique' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:258:0: 'QuantileCycles.reward_laws_valid' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:259:0: 'QuantileCycles.rewards_bounded' depends on axioms: [propext]\ninfo: ././././QuantileCycles.lean:260:0: 'QuantileCycles.discount_valid' depends on axioms: [propext]\ninfo: ././././QuantileCycles.lean:261:0: 'QuantileCycles.expected_rewards' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:262:0: 'QuantileCycles.strict_reward_gap' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:263:0: 'QuantileCycles.stationary_values' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:264:0: 'QuantileCycles.true_action_optimal' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:265:0: 'QuantileCycles.optimal_bellman' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:266:0: 'QuantileCycles.randomized_policy_optimal' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:267:0: 'QuantileCycles.finite_policy_bound' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:268:0: 'QuantileCycles.always_A_attains_bound' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:269:0: 'QuantileCycles.strict_greedy_phases' depends on axioms: [propext]\ninfo: ././././QuantileCycles.lean:270:0: 'QuantileCycles.phase_atoms_sorted' depends on axioms: [propext]\ninfo: ././././QuantileCycles.lean:271:0: 'QuantileCycles.cycle_targets_valid' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:272:0: 'QuantileCycles.cycle_quantiles_strict' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:273:0: 'QuantileCycles.cycle_quantiles_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:274:0: 'QuantileCycles.cycle_closure' depends on axioms: [propext, Classical.choice, Quot.sound]\ninfo: ././././QuantileCycles.lean:275:0: 'QuantileCycles.phases_distinct' depends on axioms: [propext]\ninfo: ././././QuantileCycles.lean:276:0: 'QuantileCycles.strict_suboptimal_two_cycle' depends on axioms: [propext, Classical.choice, Quot.sound]\nBuild completed successfully.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "QuantileCycles.lean"
+      ],
+      "returncode": 0,
+      "stdout": "'_private.QuantileCycles.0.QuantileCycles.cdf_le_leftCdf' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.strictJump_isInverse' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.inverse_unique' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.reward_laws_valid' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.rewards_bounded' depends on axioms: [propext]\n'QuantileCycles.discount_valid' depends on axioms: [propext]\n'QuantileCycles.expected_rewards' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.strict_reward_gap' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.stationary_values' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.true_action_optimal' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.optimal_bellman' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.randomized_policy_optimal' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.finite_policy_bound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.always_A_attains_bound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.strict_greedy_phases' depends on axioms: [propext]\n'QuantileCycles.phase_atoms_sorted' depends on axioms: [propext]\n'QuantileCycles.cycle_targets_valid' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.cycle_quantiles_strict' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.cycle_quantiles_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.cycle_closure' depends on axioms: [propext, Classical.choice, Quot.sound]\n'QuantileCycles.phases_distinct' depends on axioms: [propext]\n'QuantileCycles.strict_suboptimal_two_cycle' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "diff",
+        "-u",
+        "expected-axioms.txt",
+        "actual-axioms.txt"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "source_sha256": "c3476eee8e027201a32df2a564a6c18e0e22a369ffe6064248ee917b4c1260e2",
+  "cpu_cores": 2,
+  "memory_mib": 2048,
+  "gpu": "none",
+  "lean_version": "Lean (version 4.19.0, x86_64-unknown-linux-gnu, commit 6caaee842e94, Release)"
+}

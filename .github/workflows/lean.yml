@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      LEAN_NUM_THREADS: 4
+      LEAN_NUM_THREADS: 2
     steps:
       - uses: actions/checkout@v4
       - uses: leanprover/lean-action@f061402b660e0c34644504b324e830f2991d4865 # v1
@@ -25,7 +25,7 @@ jobs:
           use-mathlib-cache: 'false'
       - name: Fetch pinned Mathlib proof dependencies
         working-directory: lean
-        run: lake exe cache get QuantileCycles.lean
+        run: lake exe cache get Mathlib.Data.Rat.Defs Mathlib.Tactic.NormNum Mathlib.Tactic.Linarith
       - name: Check proof in the Lean kernel
         working-directory: lean
         run: lake build

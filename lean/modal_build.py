@@ -45,58 +45,68 @@ def prepare(lakefile: str, toolchain: str) -> None:
     )
 
 
-image = (
-    modal.Image.debian_slim(python_version="3.11")
-    .apt_install("curl", "git", "zstd")
-    .run_function(
+image = modal.Image.debian_slim(python_version="3.11").apt_install("curl", "git", "zstd")
+if modal.is_local():
+    # Only the client has the source checkout. Image-build workers receive the
+    # pin contents as prepare's serialized arguments, not as local files.
+    image = image.run_function(
         prepare,
         args=((HERE / "lakefile.toml").read_text(), (HERE / "lean-toolchain").read_text()),
         cpu=2, memory=2048, timeout=300,
     )
-    .env({"PATH": "/root/.elan/bin:/usr/local/bin:/usr/bin:/bin",
-          "LEAN_NUM_THREADS": "2", "OMP_NUM_THREADS": "2"})
-)
+image = image.env({"PATH": "/root/.elan/bin:/usr/local/bin:/usr/bin:/bin",
+                   "LEAN_NUM_THREADS": "2", "OMP_NUM_THREADS": "2"})
 
 
-def check(source: str, manifest: str | None) -> dict:
+def check(source: str, manifest: str, expected_axioms: str) -> dict:
     work = Path("/proof")
     (work / "QuantileCycles.lean").write_text(source)
     actual_manifest = (work / "lake-manifest.json").read_text()
-    if manifest is not None and json.loads(manifest) != json.loads(actual_manifest):
+    if json.loads(manifest) != json.loads(actual_manifest):
         raise RuntimeError("The committed manifest differs from the pinned image dependencies")
+    (work / "expected-axioms.txt").write_text(expected_axioms)
     logs = []
-    for command in (["lake", "build"], ["lake", "env", "lean", "QuantileCycles.lean"]):
+    for command in (
+        ["lake", "exe", "cache", "get", "Mathlib.Data.Rat.Defs",
+         "Mathlib.Tactic.NormNum", "Mathlib.Tactic.Linarith"],
+        ["lake", "build"],
+        ["lake", "env", "lean", "QuantileCycles.lean"],
+        ["diff", "-u", "expected-axioms.txt", "actual-axioms.txt"],
+    ):
         result = subprocess.run(command, cwd=work, text=True, capture_output=True, timeout=280)
         logs.append({"command": command, "returncode": result.returncode,
                      "stdout": result.stdout, "stderr": result.stderr})
+        if command == ["lake", "env", "lean", "QuantileCycles.lean"]:
+            (work / "actual-axioms.txt").write_text(result.stdout)
         if result.returncode:
             break
     return {"manifest": actual_manifest, "commands": logs,
             "source_sha256": hashlib.sha256(source.encode()).hexdigest(),
             "cpu_cores": 2, "memory_mib": 2048, "gpu": "none",
-            "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip()}
+            "lean_version": subprocess.check_output(["lean", "--version"], cwd=work, text=True).strip()}
 
 
 @app.function(image=image, cpu=2, memory=2048, timeout=300, max_containers=1)
-def pilot(source: str, manifest: str | None) -> dict:
-    return check(source, manifest)
+def pilot(source: str, manifest: str, expected_axioms: str) -> dict:
+    return check(source, manifest, expected_axioms)
 
 
 @app.function(image=image, cpu=2, memory=2048, timeout=1800, max_containers=1)
-def full(source: str, manifest: str | None) -> dict:
-    return check(source, manifest)
+def build_full(source: str, manifest: str, expected_axioms: str) -> dict:
+    return check(source, manifest, expected_axioms)
 
 
 @app.local_entrypoint()
 def main(full: bool = False) -> None:
     manifest_path = HERE / "lake-manifest.json"
-    result = (globals()["full"] if full else pilot).remote(
+    result = (build_full if full else pilot).remote(
         (HERE / "QuantileCycles.lean").read_text(),
-        manifest_path.read_text() if manifest_path.exists() else None,
+        manifest_path.read_text(),
+        (ROOT / "results" / "lean-axioms.txt").read_text(),
     )
     manifest_path.write_text(result.pop("manifest"))
     (ROOT / "results" / "lean-build.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))
-    if len(result["commands"]) != 2 or any(c["returncode"] for c in result["commands"]):
+    if len(result["commands"]) != 4 or any(c["returncode"] for c in result["commands"]):
         raise RuntimeError("Lean rejected the proof; inspect results/lean-build.json")
-    (ROOT / "results" / "lean-axioms.txt").write_text(result["commands"][1]["stdout"])
+    (ROOT / "results" / "lean-axioms.txt").write_text(result["commands"][-2]["stdout"])

@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-10-07 — Formalize the smallest exact cycle
+
+- Added a pinned Lean 4.19.0/Mathlib Lake project for the rational K=2,
+  beta=1/4 one-state/two-action MDP.
+- Defined the exact reward-plus-continuation target laws and midpoint
+  generalized-inverse projection, then proved strict choices and distinct
+  two-cycle closure without assuming either update identity.
+- Checked normalized positive reward probabilities, reward bounds, true
+  Bellman optimality, stationary randomized-policy values, finite-policy
+  bounds and all cycle quantiles. Saved actual axiom output for every proven
+  statement, using only Lean's standard logical axioms, and added proof CI.
+- Distinguished this finite formal result from the still-unchecked general
+  real, attraction, no-fixed-point and delay-embedding claims.
+- Preserved the exact Python checker and all historical certificate bindings.
+
 ## 2026-10-06 — Make the construction easier to inspect
 
 - Rewrote the README around the exact result and the dependency-free verifier.

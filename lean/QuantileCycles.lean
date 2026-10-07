@@ -119,18 +119,20 @@ def Q_A : Table := ((107 / 120, 61 / 60), (1307 / 1920, 2267 / 1920))
 def Q_B : Table := ((1793 / 1920, 1853 / 1920), (347 / 480, 587 / 480))
 
  theorem reward_laws_valid : ValidLaw (rewardLaw .A) ∧ ValidLaw (rewardLaw .B) := by
-  norm_num [ValidLaw, mass, rewardLaw]
+  unfold ValidLaw
+  decide +kernel
 
  theorem rewards_bounded : BoundedRewards (rewardLaw .A) ∧ BoundedRewards (rewardLaw .B) := by
-  norm_num [BoundedRewards, rewardLaw]
+  unfold BoundedRewards
+  decide +kernel
 
- theorem discount_valid : 0 < beta ∧ beta < 1 := by decide
+ theorem discount_valid : 0 < beta ∧ beta < 1 := by decide +kernel
 
  theorem expected_rewards : expected (rewardLaw .A) = 91 / 128 ∧
-    expected (rewardLaw .B) = 9 / 16 := by decide
+    expected (rewardLaw .B) = 9 / 16 := by decide +kernel
 
  theorem strict_reward_gap : expected (rewardLaw .A) - expected (rewardLaw .B) = 19 / 128 ∧
-    expected (rewardLaw .B) < expected (rewardLaw .A) := by decide
+    expected (rewardLaw .B) < expected (rewardLaw .A) := by decide +kernel
 
 /-- Expected-return Bellman backup; it uses the reward law, not critic means. -/
 def trueBackup (a : Action) (v : ℚ) : ℚ := expected (rewardLaw a) + beta * v
@@ -140,7 +142,7 @@ def V_A : ℚ := 91 / 96
 def V_B : ℚ := 3 / 4
 
  theorem stationary_values : trueBackup .A V_A = V_A ∧ trueBackup .B V_B = V_B ∧
-    V_A - V_B = 19 / 96 := by decide
+    V_A - V_B = 19 / 96 := by decide +kernel
 
 /-- A is strictly better for every common continuation value. -/
  theorem true_action_optimal (v : ℚ) : trueBackup .B v < trueBackup .A v := by
@@ -157,21 +159,54 @@ def V_B : ℚ := 3 / 4
 def policyValue (p : ℚ) : ℚ :=
   (p * expected (rewardLaw .A) + (1 - p) * expected (rewardLaw .B)) / (1 - beta)
 
- theorem randomized_policy_optimal (p : ℚ) (hp : 0 ≤ p) (hp' : p ≤ 1) :
+ theorem randomized_policy_optimal (p : ℚ) (hp : 0 ≤ p ∧ p ≤ 1) :
     policyValue p ≤ V_A ∧ (policyValue p = V_A ↔ p = 1) := by
   norm_num [policyValue, expected, rewardLaw, beta, V_A]
   constructor
-  · linarith
+  · linarith [hp.2]
   · constructor <;> intro h <;> linarith
+
+/-- A finite sequence of randomized action choices with a terminal value.
+    This also describes history-dependent choices via their marginal A
+    probabilities, since reward expectations and discounting are linear. -/
+def finiteReturn : List ℚ → ℚ → ℚ
+  | [], terminal => terminal
+  | p :: rest, terminal =>
+      p * expected (rewardLaw .A) + (1 - p) * expected (rewardLaw .B) +
+        beta * finiteReturn rest terminal
+
+ theorem finite_policy_bound (ps : List ℚ)
+    (hp : ∀ p ∈ ps, 0 ≤ p ∧ p ≤ 1) (terminal : ℚ) (ht : terminal ≤ V_A) :
+    finiteReturn ps terminal ≤ V_A := by
+  induction ps with
+  | nil => exact ht
+  | cons p rest ih =>
+    have hpr := hp p (by simp)
+    have hrest : ∀ v ∈ rest, 0 ≤ v ∧ v ≤ 1 := by
+      intro v hv
+      exact hp v (by simp [hv])
+    have hb := ih hrest
+    simp only [finiteReturn]
+    norm_num [expected, rewardLaw, beta, V_A] at hb ⊢
+    linarith [hpr.2]
+
+ theorem always_A_attains_bound (n : ℕ) :
+    finiteReturn (List.replicate n 1) V_A = V_A := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp only [List.replicate_succ, finiteReturn, ih]
+    norm_num [expected, rewardLaw, beta, V_A]
 
  theorem strict_greedy_phases :
     mean Q_A.1 - mean Q_A.2 = 3 / 128 ∧
     mean Q_B.2 - mean Q_B.1 = 3 / 128 ∧
-    greedy Q_A = .A ∧ greedy Q_B = .B := by decide
+    mean Q_A.2 < mean Q_A.1 ∧ mean Q_B.1 < mean Q_B.2 ∧
+    greedy Q_A = .A ∧ greedy Q_B = .B := by decide +kernel
 
  theorem phase_atoms_sorted :
     Q_A.1.1 < Q_A.1.2 ∧ Q_A.2.1 < Q_A.2.2 ∧
-    Q_B.1.1 < Q_B.1.2 ∧ Q_B.2.1 < Q_B.2.2 := by decide
+    Q_B.1.1 < Q_B.1.2 ∧ Q_B.2.1 < Q_B.2.2 := by decide +kernel
 
 /-- These are the actual product target laws in the two backups. -/
  theorem cycle_targets_valid :
@@ -179,7 +214,8 @@ def policyValue (p : ℚ) : ℚ :=
     ValidLaw (targetLaw (rewardLaw .B) Q_A.1) ∧
     ValidLaw (targetLaw (rewardLaw .A) Q_B.2) ∧
     ValidLaw (targetLaw (rewardLaw .B) Q_B.2) := by
-  norm_num [ValidLaw, mass, targetLaw, rewardLaw, Q_A, Q_B, beta]
+  unfold ValidLaw
+  decide +kernel
 
  theorem cycle_quantiles_strict :
     StrictJump (targetLaw (rewardLaw .A) Q_A.1) (1 / 4) Q_B.1.1 ∧
@@ -189,7 +225,9 @@ def policyValue (p : ℚ) : ℚ :=
     StrictJump (targetLaw (rewardLaw .A) Q_B.2) (1 / 4) Q_A.1.1 ∧
     StrictJump (targetLaw (rewardLaw .A) Q_B.2) (3 / 4) Q_A.1.2 ∧
     StrictJump (targetLaw (rewardLaw .B) Q_B.2) (1 / 4) Q_A.2.1 ∧
-    StrictJump (targetLaw (rewardLaw .B) Q_B.2) (3 / 4) Q_A.2.2 := by decide
+    StrictJump (targetLaw (rewardLaw .B) Q_B.2) (3 / 4) Q_A.2.2 := by
+  unfold StrictJump
+  decide +kernel
 
 /-- Every computed midpoint on either phase satisfies the generalized inverse
     condition for all rational thresholds y below it, not just target atoms. -/
@@ -201,20 +239,20 @@ def policyValue (p : ℚ) : ℚ :=
   all_goals
     apply strictJump_isInverse
     · norm_num [targetLaw, rewardLaw, atoms, greedy, mean, Q_A, Q_B, beta]
-    · decide
+    · unfold StrictJump
+      decide +kernel
 
- theorem cycle_closure : F Q_A = Q_B ∧ F Q_B = Q_A := by decide
+ theorem cycle_closure : F Q_A = Q_B ∧ F Q_B = Q_A := by decide +kernel
 
- theorem phases_distinct : Q_A ≠ Q_B := by decide
+ theorem phases_distinct : Q_A ≠ Q_B := by decide +kernel
 
  theorem strict_suboptimal_two_cycle :
     F Q_A = Q_B ∧ F Q_B = Q_A ∧ Q_A ≠ Q_B ∧
     greedy Q_A = .A ∧ greedy Q_B = .B ∧
     trueBackup (greedy Q_B) V_A < trueBackup .A V_A := by
-  exact ⟨cycle_closure.1, cycle_closure.2, phases_distinct,
-    strict_greedy_phases.2.2.1, strict_greedy_phases.2.2.2,
-    by rw [strict_greedy_phases.2.2.2]; exact true_action_optimal V_A⟩
+  decide +kernel
 
+#print axioms cdf_le_leftCdf
 #print axioms strictJump_isInverse
 #print axioms inverse_unique
 #print axioms reward_laws_valid
@@ -226,6 +264,8 @@ def policyValue (p : ℚ) : ℚ :=
 #print axioms true_action_optimal
 #print axioms optimal_bellman
 #print axioms randomized_policy_optimal
+#print axioms finite_policy_bound
+#print axioms always_A_attains_bound
 #print axioms strict_greedy_phases
 #print axioms phase_atoms_sorted
 #print axioms cycle_targets_valid

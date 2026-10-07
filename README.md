@@ -4,7 +4,7 @@ An exact counterexample to convergence of mean-greedy, hard quantile-projected B
 
 **Question:** can a finite quantile critic keep changing its greedy action forever, even when the MDP has a unique optimal policy?
 
-I constructed a one-state, two-action discounted MDP family and proved that its projected control operator has an attracting two-cycle and no fixed point. [`THEOREM.md`](THEOREM.md) contains the construction and proof; [`certify.py`](certify.py) checks finite instances with exact rational arithmetic. [`verify.py`](verify.py) reproduces the stored certificates, including their source hashes.
+I constructed a one-state, two-action MDP family. [`THEOREM.md`](THEOREM.md) gives the general mathematical argument; [`certify.py`](certify.py) checks finite instances exactly. I formalized the smallest rational counterexample in [`lean/QuantileCycles.lean`](lean/QuantileCycles.lean), including target laws and generalized-inverse midpoint projection.
 
 **Result:** yes, for every quantile count **K ≥ 2**, with a corresponding MDP. One cycle phase strictly chooses the genuinely suboptimal action; no greedy tie is needed on the cycle. This is a theorem about an exact operator, not an observed QR-DQN training failure.
 
@@ -16,15 +16,15 @@ From the repository root, the first check is:
 python -B verify.py
 ```
 
-Python 3.11+ and its standard library are enough: no installation, GPU, dataset or paid compute. A laptop CPU suffices. The verifier checks [18 one-state instances, five fixed-discount instances and 18 zero-start trajectories](results/verification.json); comparison is exact JSON equality apart from runtime and Python-version metadata. These finite checks support, but do not replace, the general proof.
+The existing verifier needs only Python 3.11+ and its standard library. It reproduces [18 one-state instances, five fixed-discount instances and 18 zero-start trajectories](results/verification.json), comparing exact JSON apart from runtime/version metadata. Finite checks do not prove the universal theorem.
 
-Regenerate the figure with:
+The separate Lean check uses the [pinned Lean 4.19.0 and Mathlib revision](lean/lakefile.toml):
 
 ```sh
-python -B tools/render_cycle.py
+cd lean && lake exe cache get Mathlib.Data.Rat.Defs Mathlib.Tactic.NormNum Mathlib.Tactic.Linarith && lake build
 ```
 
-Push and pull-request CI runs the verifier and checks that the committed SVG matches its generator.
+CI also checks the SVG and compares actual `#print axioms` output with [`results/lean-axioms.txt`](results/lean-axioms.txt). I checked the [pinned proof](lean/modal_build.py) on two CPU cores and 2 GiB; [cloud budget estimate](results/lean-compute.json): **$0.02**.
 
 ## The smallest cycle
 
@@ -50,13 +50,19 @@ At **γ = 9/10**, the [stored fixed-discount certificates](results/certificates.
 | 16 | 33 | 66 |
 | 32 | 40 | 80 |
 
+## What is machine-checked
+
+The Lean scope is **K = 2, β = 1/4 over rationals**: normalized positive probabilities, reward bounds, true Bellman optimality, randomized-policy values and finite-policy bounds, strict greedy choices, all eight generalized-inverse quantiles, and distinct exact two-cycle closure. The update constructs reward-plus-continuation laws, not a phase lookup.
+
+This finite proof is checked by Lean's kernel with no sorry and no axioms beyond Lean's standard three (propext, Classical.choice, Quot.sound). [Actual `#print axioms` output](results/lean-axioms.txt) covers every public theorem. The arbitrary-K **real** theorem, attraction, no-fixed-point conclusion, delay embedding and K=1 boundary are **not Lean-checked**. A checked cycle alone does not exclude other fixed points.
+
 ## Limitations and next steps
 
 - The MDP and reward law depend on K; the suboptimal-policy loss shrinks with K. This is not one MDP failing at every capacity.
 - Hard midpoint projection is not pinball/Huber SGD, replay, target networks or deep QR-DQN.
 - Earlier sampled experiments on a **different** witness failed their larger-critic practical criterion; [the historical record](historical/README.md) is retained unchanged.
 - At **K = 1**, the discounted single-atom operator is a contraction, though its fixed point need not optimize expected return ([proof](THEOREM.md#8-why-k1-is-different)).
-- The proof is not Lean-checked or externally peer-reviewed; priority is unestablished. [Next steps](docs/NEXT.md) specify formalization and sampled-learning work. [Supporting records](docs/HANDOFF.md) retain the earlier decisions and verification detail.
+- The general proof is not machine-checked or externally peer-reviewed; priority is unestablished. [Next steps](docs/NEXT.md) separate the completed rational example from general formalization and sampled learning. [Supporting records](docs/HANDOFF.md) preserve earlier decisions.
 
 ## Prior work
 
