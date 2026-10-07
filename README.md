@@ -1,65 +1,59 @@
 # Quantile Cycles
 
-An exact counterexample to convergence of mean-greedy, hard quantile-projected Bellman control in distributional reinforcement learning.
+An exact counterexample to hard quantile-projected Bellman control, with a sampled test that separates this operator from quantile-Huber learning.
 
-**Question:** can a finite quantile critic keep changing its greedy action forever, even when the MDP has a unique optimal policy?
+**Question:** can a mean-greedy quantile critic alternate forever between the optimal and a worse action—and does that failure survive standard Huber updates?
 
-I constructed a one-state, two-action discounted MDP family and proved that its projected control operator has an attracting two-cycle and no fixed point. [`THEOREM.md`](THEOREM.md) contains the construction and proof; [`certify.py`](certify.py) checks finite instances with exact rational arithmetic. [`verify.py`](verify.py) reproduces the stored certificates, including their source hashes.
+I constructed a one-state MDP with a strict two-cycle and no fixed point for the hard projected operator ([proof](THEOREM.md), [exact checker](certify.py)). I then ran population and paired sampled learning without changing the MDP after seeing the results ([code](sampled.py), [fixed protocol](docs/SAMPLED_PROTOCOL.md)).
 
-**Result:** yes, for every quantile count **K ≥ 2**, with a corresponding MDP. One cycle phase strictly chooses the genuinely suboptimal action; no greedy tie is needed on the cycle. This is a theorem about an exact operator, not an observed QR-DQN training failure.
+**Result:** the exact cycle exists, but the pre-specified material Huber failure does not. I ran **32 seeds × 100,000 updates**, with **32 target pairs per action**. All four required Huber comparisons failed the stopping rule, so I did not run replay/network training ([complete results](results/sampled-summary.json)).
+
+## The exact result
+
+![Two exact critic phases make the greedy action flip, although expected rewards favor A.](docs/two-phase-cycle.svg)
+
+For **K=2**, discount **1/4**, A pays **91/128**. B pays **0, 1/2, 1** with probabilities **3/16, 1/2, 5/16**. Both projected greedy gaps are **3/128**, while A's true reward advantage is **19/128** and always B loses **19/96** in discounted value ([certificate](results/certificates.json)).
+
+The [paper proof](THEOREM.md) constructs a corresponding MDP for every **K≥2**, with **0<β≤1/(2K)**. Every finite real initial table approaches its strict two-cycle modulo phase, including arbitrary transient tie choices; hence there is no fixed point. For a prescribed discount **0<γ<1**, a delay chain gives **L=ceil(log(2K)/(−log γ))** states and exact period **2L**, with local—not common-phase global—attraction. The [stored certificates](results/certificates.json) check periods **28, 36, 54, 66, 80** at γ=9/10.
+
+The [separate Lean PR](https://github.com/mottopanikeiku/quantile-cycles/pull/2) checks the specific rational K=2 MDP, its generalized-inverse quantiles and strict two-cycle. It is checked by Lean's kernel with no sorry and no axioms beyond Lean's standard three (propext, Classical.choice, Quot.sound); [every axiom listing](https://github.com/mottopanikeiku/quantile-cycles/blob/night2-lean/results/lean-axioms.txt) is saved. The general real-valued attraction and no-fixed-point theorems are not formalized. This sampled branch contains Python checks, not the Lean project.
+
+## What changed under learning
+
+The table reports normalized final-window stationary-policy regret: the fraction of greedy choices that are B, averaged over seeds. Each pair is **constant / decaying** steps. These family rows use different K-dependent MDPs.
+
+| Family K | Sampled pinball | Sampled Huber κ=1 | Paired scalar |
+|---:|---:|---:|---:|
+| 2 | 0.37519 / 0.39939 | 0 / 0 | 0 / 0 |
+| 8 | 0.07916 / 0.11637 | 0 / 0 | 0 / 0 |
+| 32 | 0.10325 / 0.02846 | 0.00429 / 0 | 0.07826 / 0.00229 |
+
+Source: [all cells, seeds and intervals](results/sampled-summary.json); [raw checkpoints](results/sampled-raw.json.gz). Population Huber has zero final-window regret in every setting. At K=32 with constant steps, sampled Huber's paired normalized excess is **−0.07396**, with **95% CI [−0.07662, −0.07127]**. It is better than this scalar baseline, not a practical failure.
+
+I also held the K=2 MDP fixed while increasing critic capacity to 8 and 32: all sampled losses had zero observed final-window regret. [The full report](docs/SAMPLED_RESULTS.md) includes damped hard backups, absolute regret, switching rates and the shrinking CDF margins. Noisy switches do not certify a periodic orbit.
 
 ## Reproduce
 
-From the repository root, the first check is:
+For the full study, use Python 3.11 and a Modal account:
 
 ```sh
-python -B verify.py
+python -m pip install -r requirements-sampled.txt modal
+python -B verify.py && modal run modal_sampled.py --stage population --output results/population.json.gz && modal run modal_sampled.py --stage sampled --output results/sampled-raw.json.gz
+python -B tools/summarize_sampled.py
 ```
 
-Python 3.11+ and its standard library are enough: no installation, GPU, dataset or paid compute. A laptop CPU suffices. The verifier checks [18 one-state instances, five fixed-discount instances and 18 zero-start trajectories](results/verification.json); comparison is exact JSON equality apart from runtime and Python-version metadata. These finite checks support, but do not replace, the general proof.
+The exact verifier alone needs only Python's standard library. The study used CPU-only containers with **2 cores and 1 GiB each**, at most **four** containers; the pilots and full runs have a cost upper bound of about **$0.022** ([compute record](results/sampled-compute.json)). CI checks exact certificates, the generated figure, loss gradients, sample pairing, endpoint accounting and the committed seed-bootstrap analysis; it does not repeat full training.
 
-Regenerate the figure with:
+## Limits
 
-```sh
-python -B tools/render_cycle.py
-```
-
-Push and pull-request CI runs the verifier and checks that the committed SVG matches its generator.
-
-## The smallest cycle
-
-![Two exact critic phases: quantile atoms and their means make the greedy action flip from A to B and back, although true expected values favor A.](docs/two-phase-cycle.svg)
-
-The figure is generated directly from [`family(2, Fraction(1, 4))`](certify.py), with both Bellman backups checked by the [drawing script](tools/render_cycle.py). Circles are projected quantiles; diamonds are their arithmetic means. These are exact constructed values, not sampled measurements.
-
-For **K = 2**, discount **1/4**, action A always pays **91/128**. B pays **0, 1/2, 1** with probabilities **3/16, 1/2, 5/16** ([construction](THEOREM.md#6-a-smallest-explicit-example)). Both projected greedy gaps are **3/128**, but A's true mean-reward advantage is **19/128**. Always taking B loses **19/96** in discounted value ([certificate](results/certificates.json)). The figure distinguishes optimal-continuation action values from the values of always taking each action.
-
-## General statement
-
-For every integer **K ≥ 2** and **0 < β ≤ 1/(2K)**, the constructed one-state MDP has rewards in **[0,1]**, unique quantiles on its exact two-cycle, and strict alternating greedy choices. Every finite real initial atom table converges to that cycle **modulo phase**, regardless of transient greedy tie choices. Thus the operator has **no fixed point**.
-
-For any prescribed **0 < γ < 1**, a deterministic delay chain gives **L states** and a locally attracting cycle of primitive period **2L**, where **L = ceil(log(2K)/(−log γ))**. Its operator also has no fixed point. Unlike the one-state result, this does not assert global convergence to one common phase alignment.
-
-At **γ = 9/10**, the [stored fixed-discount certificates](results/certificates.json) check every primitive state backup:
-
-| Quantiles K | States L | Exact period 2L |
-|---:|---:|---:|
-| 2 | 14 | 28 |
-| 3 | 18 | 36 |
-| 8 | 27 | 54 |
-| 16 | 33 | 66 |
-| 32 | 40 | 80 |
-
-## Limitations and next steps
-
-- The MDP and reward law depend on K; the suboptimal-policy loss shrinks with K. This is not one MDP failing at every capacity.
-- Hard midpoint projection is not pinball/Huber SGD, replay, target networks or deep QR-DQN.
-- Earlier sampled experiments on a **different** witness failed their larger-critic practical criterion; [the historical record](historical/README.md) is retained unchanged.
-- At **K = 1**, the discounted single-atom operator is a contraction, though its fixed point need not optimize expected return ([proof](THEOREM.md#8-why-k1-is-different)).
-- The proof is not Lean-checked or externally peer-reviewed; priority is unestablished. [Next steps](docs/NEXT.md) specify formalization and sampled-learning work. [Supporting records](docs/HANDOFF.md) retain the earlier decisions and verification detail.
+- The family changes with K; it is not one MDP failing at every capacity.
+- Hard quantile projection, pinball SGD and Huber SGD are different operators.
+- Finite runs do not prove asymptotic convergence or nonconvergence; zero seed-bootstrap intervals do not exclude rare unseen seeds.
+- This generative-sampler tabular study has no exploration, replay, target networks or meaningful generalization test.
+- The general theorem is not Lean-checked or externally peer-reviewed. Earlier sampled work on a different witness remains [negative](historical/README.md); priority is unestablished.
 
 ## Prior work
 
-This builds on [Dabney et al.'s quantile projection](https://arxiv.org/abs/1710.10044), [Rowland et al.'s finite-quantile suboptimality examples](https://proceedings.mlr.press/v97/rowland19a.html), and [distributional control nonconvergence examples](https://www.distributional-rl.org/contents/chapter7). The proposed distinction is strict suboptimal cycling with one-state global attraction, not distributional nonconvergence itself. [`PRIOR_ART.md`](PRIOR_ART.md) gives the comparison and attribution.
+I build on [Dabney et al.'s quantile projection and Huber loss](https://arxiv.org/abs/1710.10044), [Rowland et al.'s finite-quantile suboptimality examples](https://proceedings.mlr.press/v97/rowland19a.html), and [distributional control nonconvergence examples](https://www.distributional-rl.org/contents/chapter7). [PRIOR_ART.md](PRIOR_ART.md) distinguishes this construction from those results; [NEXT.md](docs/NEXT.md) retains the general formalization plan.
 
 Written with AI coding assistance.
