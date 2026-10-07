@@ -65,16 +65,9 @@ def midpoint_projection(values, weights, k):
         raise ValueError("a nonempty finite law and positive capacity are required")
     if np.any(weights < 0) or not np.isclose(weights.sum(), 1.0, rtol=0, atol=1e-12):
         raise ValueError("law weights must be nonnegative and sum to one")
-    order = np.argsort(values, kind="stable")
-    ordered = values[order]
-    unique, first = np.unique(ordered, return_index=True)
-    masses = np.add.reduceat(weights[order], first)
-    positive = masses > 0
-    unique, masses = unique[positive], masses[positive]
-    cumulative = np.cumsum(masses)
-    cumulative[-1] = 1.0
-    indices = np.searchsorted(cumulative, midpoint_taus(k), side="left")
-    return unique[indices]
+    output = np.empty(k)
+    _project_general(values, weights, k, output)
+    return output
 
 
 def target_law(critic, model, action):
@@ -187,6 +180,27 @@ def paired_draws(seed, reward_k, update, batch_size=32):
 
 
 @njit(cache=True)
+def _project_general(values, masses, k, output):
+    """Aggregate ties and compensate the cumulative sum before inverse lookup."""
+    order = np.argsort(values, kind="mergesort")
+    index, cumulative, correction = 0, 0.0, 0.0
+    value = values[order[0]]
+    for i in range(k):
+        tau = (i + 0.5) / k
+        while cumulative < tau and index < len(order):
+            value = values[order[index]]
+            while index < len(order) and values[order[index]] == value:
+                increment = masses[order[index]] - correction
+                advanced = cumulative + increment
+                correction = (advanced - cumulative) - increment
+                cumulative = advanced
+                index += 1
+            if cumulative >= tau or index == len(order):
+                break
+        output[i] = value
+
+
+@njit(cache=True)
 def _project_sorted(continuation, rewards, weights, beta, k, output):
     """Fast separated-block projection, general enumeration if blocks overlap."""
     separated = True
@@ -219,14 +233,7 @@ def _project_sorted(continuation, rewards, weights, beta, k, output):
             index = j * len(continuation) + l
             values[index] = rewards[j] + beta * continuation[l]
             masses[index] = weights[j] / len(continuation)
-    order = np.argsort(values)
-    index, cumulative = 0, masses[order[0]]
-    for i in range(k):
-        tau = (i + 0.5) / k
-        while cumulative < tau and index < n - 1:
-            index += 1
-            cumulative += masses[order[index]]
-        output[i] = values[order[index]]
+    _project_general(values, masses, k, output)
 
 
 @njit(cache=True)
@@ -248,7 +255,9 @@ def _run_kernel(c, beta, rewards, weights, reward_k, k, codes, initials, scales,
     uniforms = np.empty((2, batch_size))
     target_samples = np.empty(batch_size)
     reward_cdf = np.cumsum(weights)
-    mean_b_reward = np.dot(rewards, weights)
+    mean_b_reward = 0.0
+    for j in range(len(rewards)):
+        mean_b_reward += rewards[j] * weights[j]
     cp = 1  # validated checkpoints always start at zero
     for t in range(1, updates + 1):
         if sampled:
@@ -351,6 +360,7 @@ def checkpoint_metrics(critic, model, batch_size, kappa=1.0):
     k = critic.shape[1]
     means = critic.mean(axis=1)
     selected = int(means[1] > means[0])
+    mean_targets = np.array([model["c"], model["mean_b"]]) + model["beta"] * max(means)
     residual, losses, crossings = 0.0, {"pinball": [], "huber": []}, []
     for a in range(2):
         values, weights = target_law(critic, model, a)
@@ -373,6 +383,7 @@ def checkpoint_metrics(critic, model, batch_size, kappa=1.0):
         crossings.append(action_crossings)
     return {"critic": critic.tolist(), "critic_means": means.tolist(), "greedy_action": "B" if selected else "A",
             "absolute_regret": selected * model["stationary_loss"], "hard_bellman_residual": residual,
+            "mean_bellman_residual": float(np.max(np.abs(mean_targets - means))),
             "expected_pinball_loss_by_action": losses["pinball"],
             "expected_huber_loss_by_action": losses["huber"], "cdf_crossings_by_action": crossings}
 

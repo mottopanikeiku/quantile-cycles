@@ -99,6 +99,9 @@ class FamilyTests(unittest.TestCase):
             optimal_q_b = model["mean_b"] + model["beta"] * optimal_value
             self.assertAlmostEqual(optimal_value - optimal_q_b, model["reward_gap"], places=14)
             self.assertAlmostEqual(optimal_value - model["mean_b"] / (1 - model["beta"]), model["stationary_loss"], places=14)
+            metrics = sampled.checkpoint_metrics(np.array([[optimal_value], [optimal_q_b]]), model, 32)
+            self.assertLess(metrics["mean_bellman_residual"], 2e-15)
+            self.assertGreater(metrics["hard_bellman_residual"], 0.0)
         config = tiny_config(updates=1)
         config["endpoint_start"] = 1
         config["checkpoints"] = [0, 1]

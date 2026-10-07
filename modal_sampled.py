@@ -86,20 +86,20 @@ def run_batch(stage: str, config: dict, seeds: list[int]) -> dict:
 
 @app.local_entrypoint()
 def main(stage: str = "pilot", output: str = "results/sampled-pilot.json", seed_batch: int = 8):
-    if stage not in {"pilot", "population", "sampled"}:
-        raise ValueError("stage must be pilot, population or sampled")
+    if stage not in {"pilot", "population-pilot", "population", "sampled"}:
+        raise ValueError("stage must be pilot, population-pilot, population or sampled")
     if seed_batch < 1:
         raise ValueError("seed_batch must be positive")
     config_path = ROOT / "sampled-config.json"
     config = json.loads(config_path.read_text())
     inputs = []
-    if stage == "pilot":
+    if stage in {"pilot", "population-pilot"}:
         pilot = copy.deepcopy(config)
         pilot["updates"] = 2000
         pilot["endpoint_start"] = 1601
         pilot["checkpoints"] = [0, 1, 10, 100, 1000, 2000]
         pilot["cases"] = [case for case in config["cases"] if case["name"] == "family-32"]
-        inputs.append(("sampled", pilot, [0, 1]))
+        inputs.append(("population", pilot, []) if stage == "population-pilot" else ("sampled", pilot, [0, 1]))
     else:
         for case in config["cases"]:
             subset = copy.deepcopy(config)
