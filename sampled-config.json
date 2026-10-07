@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "updates": 100000,
+  "batch_size": 32,
+  "seeds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+  "initialization": "zero",
+  "tie_breaking": "A",
+  "huber_kappa": 1.0,
+  "schedules": {
+    "constant": {"initial": 0.05, "decay_scale": 1000.0, "exponent": 0.0},
+    "decaying": {"initial": 0.2, "decay_scale": 1000.0, "exponent": 0.6}
+  },
+  "cases": [
+    {"name": "family-2", "reward_k": 2, "critic_k": 2},
+    {"name": "family-8", "reward_k": 8, "critic_k": 8},
+    {"name": "family-32", "reward_k": 32, "critic_k": 32},
+    {"name": "fixed-2", "reward_k": 2, "critic_k": 2},
+    {"name": "fixed-8", "reward_k": 2, "critic_k": 8},
+    {"name": "fixed-32", "reward_k": 2, "critic_k": 32}
+  ],
+  "population_methods": ["hard", "damped", "pinball", "huber", "scalar"],
+  "sampled_methods": ["pinball", "huber", "scalar"],
+  "checkpoints": [0, 1, 10, 100, 1000, 10000, 20000, 40000, 60000, 80000, 100000],
+  "endpoint_start": 80001,
+  "bootstrap_replicates": 10000,
+  "bootstrap_seed": 20261007,
+  "network_gate": {
+    "family_critic_k": [8, 32],
+    "loss": "huber",
+    "schedules": ["constant", "decaying"],
+    "minimum_normalized_excess_regret": 0.25,
+    "require_positive_paired_interval_lower_endpoint": true,
+    "require_population_material_effect": true
+  },
+  "network_if_gate_passes": {
+    "environment_steps": 100000,
+    "seeds": 32,
+    "batch_size": 32,
+    "replay_capacity": 10000,
+    "warmup_steps": 1000,
+    "adam_learning_rate": 0.001,
+    "epsilon_initial": 1.0,
+    "epsilon_final": 0.05,
+    "epsilon_decay_steps": 10000,
+    "target_refresh_intervals": [100, 1, 1000],
+    "network": "one-hot state input, 16-unit ReLU hidden layer, 2 times K output atoms; scalar baseline has 2 outputs",
+    "gate_cases": ["family-8", "family-32"]
+  }
+}

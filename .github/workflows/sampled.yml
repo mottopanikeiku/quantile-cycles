@@ -1,0 +1,30 @@
+name: Sampled learning checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  sampled:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      NUMBA_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: requirements-sampled.txt
+      - name: Install pinned study dependencies
+        run: python -m pip install -r requirements-sampled.txt
+      - name: Check gradients, pairing and stopping rules
+        run: nice -n 19 python -B -m unittest discover -s tests -v
+      - name: Reproduce paired analysis from committed measurements
+        run: nice -n 19 python -B tools/summarize_sampled.py --check

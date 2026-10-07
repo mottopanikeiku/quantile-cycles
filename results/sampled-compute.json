@@ -1,0 +1,45 @@
+{
+  "provider": "Modal",
+  "gpu": "none",
+  "currency": "USD",
+  "jobs": [
+    {
+      "stage": "population-pilot",
+      "cpu_cores_per_container": 2.0,
+      "memory_gib_per_container": 1.0,
+      "maximum_containers": 1,
+      "client_wall_minutes": 1.02,
+      "cost_upper_usd": 0.0019,
+      "exit_code": 0
+    },
+    {
+      "stage": "population",
+      "cpu_cores_per_container": 2.0,
+      "memory_gib_per_container": 1.0,
+      "maximum_containers": 4,
+      "client_wall_minutes": 1.18,
+      "cost_upper_usd": 0.0089,
+      "exit_code": 0
+    },
+    {
+      "stage": "sampled-pilot",
+      "cpu_cores_per_container": 2.0,
+      "memory_gib_per_container": 1.0,
+      "maximum_containers": 1,
+      "client_wall_minutes": 0.37,
+      "cost_upper_usd": 0.0007,
+      "exit_code": 0
+    },
+    {
+      "stage": "sampled",
+      "cpu_cores_per_container": 2.0,
+      "memory_gib_per_container": 1.0,
+      "maximum_containers": 4,
+      "client_wall_minutes": 1.33,
+      "cost_upper_usd": 0.01,
+      "exit_code": 0
+    }
+  ],
+  "note": "Cost upper bounds include a 10% margin, image build, startup and idle booked containers. Client duration is not a local performance measurement.",
+  "total_cost_upper_usd": 0.021500000000000002
+}
