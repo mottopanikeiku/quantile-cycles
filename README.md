@@ -16,7 +16,7 @@ For **K=2**, discount **1/4**, A pays **91/128**. B pays **0, 1/2, 1** with prob
 
 The [paper proof](THEOREM.md) constructs a corresponding MDP for every **K≥2**, with **0<β≤1/(2K)**. Every finite real initial table approaches its strict two-cycle modulo phase, including arbitrary transient tie choices; hence there is no fixed point. For a prescribed discount **0<γ<1**, a delay chain gives **L=ceil(log(2K)/(−log γ))** states and exact period **2L**, with local—not common-phase global—attraction. The [stored certificates](results/certificates.json) check periods **28, 36, 54, 66, 80** at γ=9/10.
 
-The [separate Lean PR](https://github.com/mottopanikeiku/quantile-cycles/pull/2) checks the specific rational K=2 MDP, its generalized-inverse quantiles and strict two-cycle. It is checked by Lean's kernel with no sorry and no axioms beyond Lean's standard three (propext, Classical.choice, Quot.sound); [every axiom listing](https://github.com/mottopanikeiku/quantile-cycles/blob/night2-lean/results/lean-axioms.txt) is saved. The general real-valued attraction and no-fixed-point theorems are not formalized. This sampled branch contains Python checks, not the Lean project.
+I formalized the specific rational K=2 MDP in [`lean/QuantileCycles.lean`](lean/QuantileCycles.lean): valid bounded rewards, true Bellman facts, actual target laws, all eight generalized-inverse quantiles and the strict, distinct two-cycle. It is checked by Lean's kernel with no sorry and no axioms beyond Lean's standard three (propext, Classical.choice, Quot.sound); [all 22 axiom listings](results/lean-axioms.txt) are saved. The real arbitrary-K theorem, attraction, absence of other fixed points, delay embedding and K=1 boundary are not formalized. A checked cycle alone does not exclude other fixed points.
 
 ## What changed under learning
 
@@ -34,15 +34,15 @@ I also held the K=2 MDP fixed while increasing critic capacity to 8 and 32: all 
 
 ## Reproduce
 
-For the full study, use Python 3.11 and a Modal account:
+Check the exact certificates, saved-data analysis and formal proof with Python 3.11 and elan:
 
 ```sh
-python -m pip install -r requirements-sampled.txt modal
-python -B verify.py && modal run modal_sampled.py --stage population --output results/population.json.gz && modal run modal_sampled.py --stage sampled --output results/sampled-raw.json.gz
-python -B tools/summarize_sampled.py
+python -m pip install -r requirements-sampled.txt
+python -B verify.py && python -B tools/summarize_sampled.py --check
+cd lean && lake exe cache get Mathlib.Data.Rat.Defs Mathlib.Tactic.NormNum Mathlib.Tactic.Linarith && lake build
 ```
 
-The exact verifier alone needs only Python's standard library. The study used CPU-only containers with **2 cores and 1 GiB each**, at most **four** containers; the pilots and full runs have a cost upper bound of about **$0.022** ([compute record](results/sampled-compute.json)). CI checks exact certificates, the generated figure, loss gradients, sample pairing, endpoint accounting and the committed seed-bootstrap analysis; it does not repeat full training.
+The exact verifier alone needs only Python's standard library. [Full training commands](docs/SAMPLED_RESULTS.md#reproduce) use Modal CPU containers with **2 cores and 1 GiB each**, at most **four** containers; pilots and full runs have a cost upper bound of about **$0.022** ([study record](results/sampled-compute.json)). The [pinned Lean 4.19.0/Mathlib proof](lean/lakefile.toml) used **2 cores and 2 GiB**, with a cloud cost estimate of **$0.02** ([proof record](results/lean-compute.json)). CI checks the certificates, figure, loss gradients, sample pairing, endpoint accounting, seed-bootstrap analysis and fresh proof/axiom output; it does not repeat training.
 
 ## Limits
 

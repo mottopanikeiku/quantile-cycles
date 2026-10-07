@@ -4,11 +4,41 @@ The exact hard-projection theorem and sampled optimization are separate
 questions. I completed the population and 32-seed tabular study in
 [SAMPLED_RESULTS.md](SAMPLED_RESULTS.md): standard κ=1 Huber failed every
 required material-effect comparison, so I stopped before replay/network
-training. The [separate Lean PR](https://github.com/mottopanikeiku/quantile-cycles/pull/2)
-checks the specific rational K=2 MDP and cycle with no sorry or added axioms.
+training. The [Lean project](../lean/QuantileCycles.lean) checks the specific
+rational K=2 MDP and cycle; its [actual axiom output](../results/lean-axioms.txt)
+uses only Lean's standard logical axioms, with no sorry or added assumptions.
 The general real-valued theorem below remains a formalization proposal.
 
 ## Lean 4: formalize the general theorem, not just the certificates
+
+### Completed finite slice
+
+I use Lean 4.19.0 and Mathlib revision
+`c44e0c8ee63ca166450922a373c7409c5d26b00b`, with a Lake manifest fixing
+transitive dependencies. The checked scope is the one-state/two-action MDP at
+K=2 and beta=1/4 over rational numbers. Its update constructs the exact
+reward/continuation product law and computes its least CDF-crossing support
+value at 1/4 and 3/4. Separate proofs characterize every cycle quantile as a
+generalized inverse against all rational thresholds below it, and show strict
+CDF jumps. This is not an assumed update formula or a phase lookup.
+
+The proof checks reward probabilities/bounds, expected rewards, the unique
+optimal Bellman fixed point and action, stationary randomized-policy
+optimality and finite-policy bounds, strict greedy gaps, target-law normalization,
+and distinct exact two-backup closure. Every proven statement, including the
+private CDF lemma, has `#print axioms`; actual output is stored in
+[`results/lean-axioms.txt`](../results/lean-axioms.txt).
+The finite proof is checked by Lean's kernel with no sorry and no axioms beyond
+Lean's standard three (propext, Classical.choice, Quot.sound). These are logical
+dependencies, not additional assumptions asserting this counterexample.
+I retain the exact Python certificates and their source bindings unchanged.
+
+The real arbitrary-K theorem, all-initializations attraction, local
+attraction, no-fixed-point conclusion, fixed-discount delay chain and K=1
+boundary remain unchecked by Lean. A finite rational cycle must not be
+presented as a formal proof of those statements. The plan below still
+describes that separate general formalization.
+
 
 ### Representation and statement
 
