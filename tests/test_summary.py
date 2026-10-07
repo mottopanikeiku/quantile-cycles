@@ -1,10 +1,12 @@
 """Small fixtures test analysis, not the actual learning experiment."""
 import copy
+import gzip
 import json
+import tempfile
 import unittest
 from pathlib import Path
 
-from tools.summarize_sampled import summarize
+from tools.summarize_sampled import rows_from_file, summarize
 
 
 class SummaryTests(unittest.TestCase):
@@ -63,6 +65,24 @@ class SummaryTests(unittest.TestCase):
     def test_population_duplicates_rejected(self):
         with self.assertRaises(ValueError):
             summarize(self.config, self.population + self.population[:1], self.sampled)
+
+    def test_local_and_modal_loader_formats(self):
+        expected = self.population[:2]
+        documents = {
+            "local": {"rows": expected},
+            "modal": {"batches": [{"result": {"rows": [row]}} for row in expected]},
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            for name, document in documents.items():
+                for compressed in (False, True):
+                    with self.subTest(schema=name, compressed=compressed):
+                        path = Path(directory) / (name + (".json.gz" if compressed else ".json"))
+                        if compressed:
+                            with gzip.open(path, "wt") as stream:
+                                json.dump(document, stream)
+                        else:
+                            path.write_text(json.dumps(document))
+                        self.assertEqual(rows_from_file(path), expected)
 
 
 if __name__ == "__main__":

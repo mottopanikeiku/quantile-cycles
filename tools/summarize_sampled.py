@@ -20,6 +20,8 @@ def rows_from_file(path: Path) -> list[dict]:
             document = json.load(stream)
     else:
         document = json.loads(path.read_text())
+    if "rows" in document:
+        return document["rows"]
     return [row for batch in document["batches"] for row in batch["result"]["rows"]]
 
 

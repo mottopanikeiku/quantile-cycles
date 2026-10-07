@@ -13,6 +13,8 @@
   bootstrap interval, plus CPU cloud costs and reproducible analysis.
 - I added independent small gradient, projection, sample-pairing and endpoint
   tests, and CI that checks the committed results without repeating training.
+- I made the summary reader accept both direct local-run JSON and batched
+  cloud results, and tested both formats with plain and compressed files.
 - The specific Lean proof is a separate PR; I do not claim a general formal
   attraction or no-fixed-point theorem.
 
