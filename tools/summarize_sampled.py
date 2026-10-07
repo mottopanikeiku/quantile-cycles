@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import json
 import math
@@ -14,7 +15,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def rows_from_file(path: Path) -> list[dict]:
-    document = json.loads(path.read_text())
+    if path.suffix == ".gz":
+        with gzip.open(path, "rt") as stream:
+            document = json.load(stream)
+    else:
+        document = json.loads(path.read_text())
     return [row for batch in document["batches"] for row in batch["result"]["rows"]]
 
 
@@ -123,8 +128,8 @@ def summarize(config: dict, population: list[dict], sampled: list[dict]) -> dict
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=ROOT / "sampled-config.json")
-    parser.add_argument("--population", type=Path, default=ROOT / "results/population.json")
-    parser.add_argument("--sampled", type=Path, default=ROOT / "results/sampled-raw.json")
+    parser.add_argument("--population", type=Path, default=ROOT / "results/population.json.gz")
+    parser.add_argument("--sampled", type=Path, default=ROOT / "results/sampled-raw.json.gz")
     parser.add_argument("--output", type=Path, default=ROOT / "results/sampled-summary.json")
     parser.add_argument("--check", action="store_true", help="Check the committed summary without rewriting it")
     args = parser.parse_args()

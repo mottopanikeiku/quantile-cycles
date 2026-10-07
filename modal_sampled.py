@@ -8,6 +8,7 @@ Examples:
 from __future__ import annotations
 
 import copy
+import gzip
 import hashlib
 import json
 import os
@@ -40,6 +41,7 @@ def run_batch(stage: str, config: dict, seeds: list[int]) -> dict:
     import time
 
     sys.path.insert(0, "/root/study")
+    import llvmlite
     import numba
     import numpy as np
     import sampled
@@ -50,6 +52,19 @@ def run_batch(stage: str, config: dict, seeds: list[int]) -> dict:
         if stage == "population"
         else sampled.run_sampled(config, seeds)
     )
+    # Keep all saved critics so the atom-wise diagnostics can be regenerated,
+    # but summarize CDF rows before transferring the result to the client.
+    for row in result["rows"]:
+        for point in row["checkpoints"]:
+            point["cdf_resolution_by_action"] = [
+                {
+                    "minimum_left_margin": min(atom["left_margin"] for atom in action),
+                    "minimum_right_margin": min(atom["right_margin"] for atom in action),
+                    "maximum_cdf_standard_error": max(max(atom["cdf_left_standard_error"], atom["cdf_right_standard_error"]) for atom in action),
+                    "maximum_empirical_crossing_miss_probability": max(atom["empirical_crossing_miss_probability"] for atom in action),
+                }
+                for action in point.pop("cdf_crossings_by_action")
+            ]
     return {
         "result": result,
         "hardware": {
@@ -61,6 +76,8 @@ def run_batch(stage: str, config: dict, seeds: list[int]) -> dict:
             "python": platform.python_version(),
             "numpy": np.__version__,
             "numba": numba.__version__,
+            "llvmlite": llvmlite.__version__,
+            "cpu_model": next((line.split(":", 1)[1].strip() for line in Path("/proc/cpuinfo").read_text().splitlines() if line.startswith("model name")), platform.processor()),
             "threads": {name: os.environ[name] for name in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMBA_NUM_THREADS")},
         },
         "remote_wall_seconds": time.monotonic() - started,
@@ -113,6 +130,11 @@ def main(stage: str = "pilot", output: str = "results/sampled-pilot.json", seed_
     }
     destination = ROOT / output
     destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(json.dumps(result, indent=2) + "\n")
+    if destination.suffix == ".gz":
+        with gzip.open(destination, "wt", compresslevel=6) as stream:
+            json.dump(result, stream, separators=(",", ":"), allow_nan=False)
+            stream.write("\n")
+    else:
+        destination.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n")
     print(f"Saved {len(batches)} batches to {output}")
     print(json.dumps(result["billing"], indent=2))
