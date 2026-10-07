@@ -15,6 +15,24 @@
   real, attraction, no-fixed-point and delay-embedding claims.
 - Preserved the exact Python checker and all historical certificate bindings.
 
+## 2026-10-07 — Test sampling separately from Huber smoothing
+
+- I fixed the settings and stopping rules before the first run, then compared
+  hard projection, damping, population pinball/Huber and paired sampled control.
+- I ran every tabular cell with 32 seeds, 100,000 updates and batch 32, including
+  a separately labeled fixed-MDP capacity comparison and paired scalar control.
+- All four required Huber excess-regret comparisons failed. At family K=32 with
+  constant steps, Huber had less final-window regret than scalar control.
+  I stopped before the conditional replay/network stage.
+- I saved every seed, checkpoint critic, loss, Bellman residual and paired
+  bootstrap interval, plus CPU cloud costs and reproducible analysis.
+- I added independent small gradient, projection, sample-pairing and endpoint
+  tests, and CI that checks the committed results without repeating training.
+- I made the summary reader accept both direct local-run JSON and batched
+  cloud results, and tested both formats with plain and compressed files.
+- I keep the specific Lean proof separate from the general formal attraction
+  and no-fixed-point claims; combining these results does not expand its scope.
+
 ## 2026-10-06 — Make the construction easier to inspect
 
 - Rewrote the README around the exact result and the dependency-free verifier.

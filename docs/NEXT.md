@@ -1,9 +1,13 @@
 # Next: formal proof and sampled quantile learning
 
-The current general result concerns the exact hard-projection operator in
-[`THEOREM.md`](../THEOREM.md), not stochastic optimization. I have now formalized
-the smallest rational counterexample in [`lean/QuantileCycles.lean`](../lean/QuantileCycles.lean).
-This does not formalize the general real theorem or settle sampled learning.
+The exact hard-projection theorem and sampled optimization are separate
+questions. I completed the population and 32-seed tabular study in
+[SAMPLED_RESULTS.md](SAMPLED_RESULTS.md): standard κ=1 Huber failed every
+required material-effect comparison, so I stopped before replay/network
+training. The [Lean project](../lean/QuantileCycles.lean) checks the specific
+rational K=2 MDP and cycle; its [actual axiom output](../results/lean-axioms.txt)
+uses only Lean's standard logical axioms, with no sorry or added assumptions.
+The general real-valued theorem below remains a formalization proposal.
 
 ## Lean 4: formalize the general theorem, not just the certificates
 
@@ -92,11 +96,12 @@ prove the finite-quantile characterization and nonexpansiveness; revise that
 estimate based on the actual library gaps. A proof of only K=2 is useful for
 checking definitions but must not be presented as the general theorem.
 
-Completion means Lean checks the actual quantified statements with no `sorry`,
-extra mathematical axioms or assumed cycle identities. Keep Python certificates
-as independently executable examples. Use free local CPU builds at low
-priority (`nice -n 19`), a pinned Lean/Mathlib toolchain and cached
-dependencies. No paid compute is needed.
+Completion of the general theorem would mean Lean checks its actual quantified
+statements with no `sorry`, extra mathematical axioms or assumed cycle
+identities. The specific K=2 proof does not meet that general-theorem scope.
+Keep Python certificates as independently executable examples. Use a pinned
+Lean/Mathlib toolchain and cached dependencies; the specific proof was built
+in ephemeral CPU containers rather than claiming local performance.
 
 ## Sampled QR-DQN: a bounded, falsifiable experiment
 
@@ -149,11 +154,11 @@ must report its own negative results without retuning the MDP to rescue them.
    evidence about deep RL generally. A later fixed-discount delay-chain run
    would test delayed bootstrapping separately.
 
-Estimated implementation/review: 3–5 days for the tabular study and another
-2–3 days for the small replay/network comparison. CPU runtime is **not yet
-measured**. Run a pilot first, record throughput, and split the full work
-into jobs of under two hours and 1,400 MB each.
-Reduce the batch of seeds per job rather than silently dropping seeds or
-raising the memory limit. Budget: $0 paid compute. If Huber removes the effect
-in the population or tabular stage, publish that answer and stop before the
-network stage. The exact theorem remains valid either way.
+The population and sampled tabular stages are now complete, including all
+pre-specified settings, schedules and seeds. The
+[compute record](../results/sampled-compute.json) gives the CPU-only cloud
+cost, including both pilots. I did not reduce the number of seeds or select
+a favorable schedule. The Huber material-effect rule failed in both stages,
+so there is no replay/network result to report. The exact hard-projection
+theorem remains valid; a future general Lean proof or a different scientific
+question must not be described as rescuing this failed practical criterion.
