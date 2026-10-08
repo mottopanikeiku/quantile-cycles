@@ -28,3 +28,5 @@ jobs:
         run: nice -n 19 python -B -m unittest discover -s tests -v
       - name: Reproduce paired analysis from committed measurements
         run: nice -n 19 python -B tools/summarize_sampled.py --check
+      - name: Recheck preserved historical certificates and stored runs
+        run: nice -n 19 python -B verify.py --historical
