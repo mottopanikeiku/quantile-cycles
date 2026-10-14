@@ -2,6 +2,8 @@
 
 I give an exact counterexample to hard quantile-projected Bellman control, with a sampled test that separates this operator from quantile-Huber learning.
 
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/hero-dark.svg"><img alt="Under exact quantile-projected Bellman iteration the greedy action alternates between the optimal and a worse action at every step; there is no fixed point." src="docs/hero-light.svg" width="600"></picture>
+
 **Question:** can a mean-greedy quantile critic alternate forever between the optimal and a worse action—and does that failure survive standard Huber updates?
 
 I constructed a one-state MDP with a strict two-cycle and no fixed point for the hard projected operator ([proof](THEOREM.md), [exact checker](certify.py)). I then ran population and paired sampled learning ([code](sampled.py), [protocol](docs/SAMPLED_PROTOCOL.md)).
