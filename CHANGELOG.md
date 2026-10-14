@@ -50,10 +50,7 @@
   greedy means, optimal-continuation action values and stationary-policy values.
 - Added the fixed-discount states/period table from the existing certificates.
 - Added CPU GitHub Actions verification and a generated-figure consistency check.
-- Moved the earlier handoff record to `docs/HANDOFF.md`; preserved certificates,
-  checker sources and historical experiments unchanged.
-- Added `docs/NEXT.md` with a Lean 4 lemma plan and a bounded sampled-learning
-  experiment. Neither formalization nor new training was attempted.
+- Preserved certificates, checker sources and historical experiments unchanged.
 
 ## 2026-09-09 — Initial research artifact
 
@@ -63,5 +60,5 @@
 - Incorporated review clarifications for the discounted K=1 assumption and minimal delay choice; retained the source-bound initial derivation separately from the final theorem.
 - Preserved the earlier K=3 search, exact and damped cycle certificates, robustness result, and both sampled-learning runs, including the failed larger-critic practical gate.
 - Added a dependency-free current verifier and optional NumPy-backed historical verification, with successful output recorded.
-- Added primary-source comparisons, claim limits, citation metadata, MIT license, and a durable research graph/handoff.
+- Added primary-source comparisons, claim limits, citation metadata, and MIT license.
 - No new learning algorithm, practical QR-DQN failure, theoretical priority, or external peer-review acceptance is claimed.
