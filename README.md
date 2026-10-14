@@ -1,12 +1,24 @@
 # Quantile Cycles
 
-An exact counterexample to hard quantile-projected Bellman control, with a sampled test that separates this operator from quantile-Huber learning.
+I give an exact counterexample to hard quantile-projected Bellman control, with a sampled test that separates this operator from quantile-Huber learning.
 
 **Question:** can a mean-greedy quantile critic alternate forever between the optimal and a worse action—and does that failure survive standard Huber updates?
 
-I constructed a one-state MDP with a strict two-cycle and no fixed point for the hard projected operator ([proof](THEOREM.md), [exact checker](certify.py)). I then ran population and paired sampled learning without changing the MDP after seeing the results ([code](sampled.py), [fixed protocol](docs/SAMPLED_PROTOCOL.md)).
+I constructed a one-state MDP with a strict two-cycle and no fixed point for the hard projected operator ([proof](THEOREM.md), [exact checker](certify.py)). I then ran population and paired sampled learning ([code](sampled.py), [protocol](docs/SAMPLED_PROTOCOL.md)).
 
 **Result:** the exact cycle exists, but the pre-specified material Huber failure does not. I ran **32 seeds × 100,000 updates**, with **32 target pairs per action**. All four required Huber comparisons failed the stopping rule, so I did not run replay/network training ([complete results](results/sampled-summary.json)).
+
+## Reproduce
+
+Check the exact certificates, saved-data analysis and formal proof with Python 3.11 and elan:
+
+```sh
+python -m pip install -r requirements-sampled.txt
+python -B verify.py && python -B tools/summarize_sampled.py --check
+cd lean && lake exe cache get Mathlib.Data.Rat.Defs Mathlib.Tactic.NormNum Mathlib.Tactic.Linarith && lake build
+```
+
+The exact verifier alone needs only Python's standard library. [Full training commands](docs/SAMPLED_RESULTS.md#reproduce) are separate from these checks.
 
 ## The exact result
 
@@ -32,18 +44,6 @@ Source: [all cells, seeds and intervals](results/sampled-summary.json); [raw che
 
 I also held the K=2 MDP fixed while increasing critic capacity to 8 and 32: all sampled losses had zero observed final-window regret. [The full report](docs/SAMPLED_RESULTS.md) includes damped hard backups, absolute regret, switching rates and the shrinking CDF margins. Noisy switches do not certify a periodic orbit.
 
-## Reproduce
-
-Check the exact certificates, saved-data analysis and formal proof with Python 3.11 and elan:
-
-```sh
-python -m pip install -r requirements-sampled.txt
-python -B verify.py && python -B tools/summarize_sampled.py --check
-cd lean && lake exe cache get Mathlib.Data.Rat.Defs Mathlib.Tactic.NormNum Mathlib.Tactic.Linarith && lake build
-```
-
-The exact verifier alone needs only Python's standard library. [Full training commands](docs/SAMPLED_RESULTS.md#reproduce) use Modal CPU containers with **2 cores and 1 GiB each**, at most **four** containers; pilots and full runs have a cost upper bound of about **$0.022** ([study record](results/sampled-compute.json)). The [pinned Lean 4.19.0/Mathlib proof](lean/lakefile.toml) used **2 cores and 2 GiB**, with a cloud cost estimate of **$0.02** ([proof record](results/lean-compute.json)). CI checks the certificates, figure, loss gradients, sample pairing, endpoint accounting, seed-bootstrap analysis, preserved historical artifacts and fresh proof/axiom output; it does not repeat training.
-
 ## Limits
 
 - The family changes with K; it is not one MDP failing at every capacity.
@@ -54,6 +54,6 @@ The exact verifier alone needs only Python's standard library. [Full training co
 
 ## Prior work
 
-I build on [Dabney et al.'s quantile projection and Huber loss](https://arxiv.org/abs/1710.10044), [Rowland et al.'s finite-quantile suboptimality examples](https://proceedings.mlr.press/v97/rowland19a.html), and [distributional control nonconvergence examples](https://www.distributional-rl.org/contents/chapter7). [PRIOR_ART.md](PRIOR_ART.md) distinguishes this construction from those results; [NEXT.md](docs/NEXT.md) retains the general formalization plan.
+I build on [Dabney et al.'s quantile projection and Huber loss](https://arxiv.org/abs/1710.10044), [Rowland et al.'s finite-quantile suboptimality examples](https://proceedings.mlr.press/v97/rowland19a.html), and [distributional control nonconvergence examples](https://www.distributional-rl.org/contents/chapter7). [PRIOR_ART.md](PRIOR_ART.md) distinguishes this construction from those results.
 
 Written with AI coding assistance.
