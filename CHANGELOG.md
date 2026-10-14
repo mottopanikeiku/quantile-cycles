@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-08 — Tighten checks
+
+- Pinned every GitHub Action to a full commit SHA.
+- Added standard-library tests for the exact checker's guards (unique
+  quantiles, strict greedy gaps, parameter range), the README's K=2 numbers,
+  the delay-length formula, and the verifier's mismatch detection.
+- CI now also rechecks the preserved historical certificates and stored runs.
+- Corrected the Modal examples to write the compressed files the summary reads,
+  and updated the citation abstract. No certificate, result or claim changed.
+
 ## 2026-10-07 — Formalize the smallest exact cycle
 
 - Added a pinned Lean 4.19.0/Mathlib Lake project for the rational K=2,

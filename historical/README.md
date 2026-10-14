@@ -25,10 +25,11 @@ The new theorem changes the MDP with K. It does not overturn this negative resul
 
 ## Recheck stored evidence
 
-From the repository root, using the optional NumPy environment described in the main README:
+From the repository root, with NumPy installed (either requirements file works; CI uses `requirements-sampled.txt`):
 
 ```sh
-.venv/bin/python -B verify.py --historical
+python -m pip install -r requirements-historical.txt
+python -B verify.py --historical
 ```
 
 The wrapper compares exact certificate JSON, rechecks manifests, compares stored arrays semantically, independently solves policy values, and recomputes sampled endpoints. It does not retrain.

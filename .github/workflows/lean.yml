@@ -14,8 +14,8 @@ jobs:
     env:
       LEAN_NUM_THREADS: 2
     steps:
-      - uses: actions/checkout@v4
-      - uses: leanprover/lean-action@f061402b660e0c34644504b324e830f2991d4865 # v1
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: leanprover/lean-action@f061402b660e0c34644504b324e830f2991d4865 # v1.6.1
         with:
           lake-package-directory: lean
           auto-config: 'false'
