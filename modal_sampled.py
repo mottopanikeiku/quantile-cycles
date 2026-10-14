@@ -2,8 +2,8 @@
 
 Examples:
     modal run modal_sampled.py --stage pilot --output results/sampled-pilot.json
-    modal run modal_sampled.py --stage population --output results/population.json
-    modal run modal_sampled.py --stage sampled --output results/sampled-raw.json
+    modal run modal_sampled.py --stage population --output results/population.json.gz
+    modal run modal_sampled.py --stage sampled --output results/sampled-raw.json.gz
 """
 from __future__ import annotations
 

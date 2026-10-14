@@ -9,6 +9,8 @@ url: "https://github.com/mottopanikeiku/quantile-cycles"
 license: MIT
 abstract: >-
   An explicit family of finite quantile-projected Bellman control operators
-  with strict suboptimal cycles, exact rational certificates, and preserved
-  negative evidence from an earlier sampled-learning continuation. Research
-  note; external peer review and priority are not established.
+  with strict suboptimal cycles, exact rational certificates, a Lean kernel
+  check of the smallest rational instance, and a pre-specified sampled-learning
+  study in which quantile-Huber updates did not reproduce a material failure.
+  Earlier negative sampled evidence on a different witness is preserved.
+  Research note; external peer review and priority are not established.

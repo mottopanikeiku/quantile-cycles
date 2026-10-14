@@ -42,7 +42,7 @@ python -B verify.py && python -B tools/summarize_sampled.py --check
 cd lean && lake exe cache get Mathlib.Data.Rat.Defs Mathlib.Tactic.NormNum Mathlib.Tactic.Linarith && lake build
 ```
 
-The exact verifier alone needs only Python's standard library. [Full training commands](docs/SAMPLED_RESULTS.md#reproduce) use Modal CPU containers with **2 cores and 1 GiB each**, at most **four** containers; pilots and full runs have a cost upper bound of about **$0.022** ([study record](results/sampled-compute.json)). The [pinned Lean 4.19.0/Mathlib proof](lean/lakefile.toml) used **2 cores and 2 GiB**, with a cloud cost estimate of **$0.02** ([proof record](results/lean-compute.json)). CI checks the certificates, figure, loss gradients, sample pairing, endpoint accounting, seed-bootstrap analysis and fresh proof/axiom output; it does not repeat training.
+The exact verifier alone needs only Python's standard library. [Full training commands](docs/SAMPLED_RESULTS.md#reproduce) use Modal CPU containers with **2 cores and 1 GiB each**, at most **four** containers; pilots and full runs have a cost upper bound of about **$0.022** ([study record](results/sampled-compute.json)). The [pinned Lean 4.19.0/Mathlib proof](lean/lakefile.toml) used **2 cores and 2 GiB**, with a cloud cost estimate of **$0.02** ([proof record](results/lean-compute.json)). CI checks the certificates, figure, loss gradients, sample pairing, endpoint accounting, seed-bootstrap analysis, preserved historical artifacts and fresh proof/axiom output; it does not repeat training.
 
 ## Limits
 
