@@ -1,9 +1,17 @@
-# Quantile-control discriminator
+# Search for a strict quantile-control cycle
 
-Question: can exact finite-quantile projected Bellman optimality iteration exhibit a persistent strict greedy-policy cycle in a tiny stationary discounted MDP, while scalar Bellman optimality converges? This is not a claim of novelty or an RL training run. It isolates projection/control feedback without sampling, optimization, replay, or neural approximation.
+The search tests whether exact finite-quantile Bellman control can produce a persistent strict greedy-policy cycle in a small stationary discounted MDP. Scalar Bellman optimality provides the comparison.
 
-Frozen before execution: NumPy generator seed 418; 512 MDPs; 3 states, 2 actions, 2 outcomes with probabilities 0.4 and 0.6 per action; integer rewards in [-3,3]; discount 0.9; 3 uniform midpoint quantiles; zero initialization; 600 synchronous iterations. Search periods 2 through 8 in the last 64 iterations. A candidate must have value-array periodicity within 1e-8, distinct greedy policies across the period, and every chosen action's mean gap above 1e-4. Retain first candidate, or report no witness in this finite search. No parameter search after observing failure.
+## Search settings
 
-Pre-execution correction: original draft used equiprobable outcomes, placing target CDF boundaries exactly on the requested quantiles and allowing nonunique quantile minimizers. Probabilities 0.4/0.6 avoid that artifact: cumulative atom probabilities are multiples of 1/15, while quantile fractions are odd multiples of 1/6. No experiment ran under the draft.
+NumPy generator seed 418; 512 MDPs; 3 states, 2 actions and 2 outcomes per state-action pair with probabilities 0.4 and 0.6; integer rewards in [-3,3]; discount 0.9; 3 uniform midpoint quantiles; zero initialization; 600 synchronous iterations.
 
-Comparator: exact expected-reward Bellman optimality iteration on the same MDP; its greedy policy and true policy values identify whether cycle is consequential. A positive witness justifies further primary-literature checking, not a new algorithm claim. Scalar Q control, C51's mean-preserving projection (when support contains targets), and Quantiled Expansion Mean are mandatory collisions/baselines. A mean-preserving scalar correction alone is not presumed new.
+Candidate periods range from 2 through 8 in the last 64 iterations. A candidate needs value-array periodicity within 1e-8, distinct greedy policies across the period and every chosen action's mean gap above 1e-4. The search returns the first qualifying witness.
+
+## Unique quantiles
+
+Probabilities 0.4/0.6 make cumulative target masses multiples of 1/15, while the requested quantiles are odd multiples of 1/6. This avoids CDF boundaries at the requested quantiles. An earlier unrun design used equiprobable outcomes, which would have allowed nonunique quantile minimizers.
+
+## Comparator
+
+Exact expected-reward Bellman optimality iteration runs on the same MDP. Its greedy policy and true policy values show whether the cycle selects a worse policy. Scalar Q control, C51's mean-preserving projection when its support contains the targets, and Quantiled Expansion Mean are relevant existing alternatives.

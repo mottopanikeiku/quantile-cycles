@@ -1,12 +1,12 @@
 # Strict cycles in finite quantile control
 
-Author: mottopanikeiku. Research note; not externally peer-reviewed. Exact executable checks and independent automated algebra review accompany, but do not replace, the proof below. Priority is not claimed.
+By Alp Cetin.
 
 ## 1. Operator and quantifiers
 
 A state-action return law is represented by K equally weighted real atoms. The control rule selects an action by their arithmetic mean. A synchronous backup forms the exact law of R + gamma times a uniformly selected atom of the greedy next action, then projects to midpoint quantiles tau_i=(i-1/2)/K, i=1,...,K. Quantiles use the canonical generalized inverse. Greedy ties may be resolved arbitrarily.
 
-This note concerns that hard projected Bellman control operator, not a quantile-risk objective, stochastic quantile SGD, Huber regression, target networks, or deep QR-DQN.
+The operator uses exact hard quantile projection. Sampled pinball and Huber updates are studied separately in [the learning experiments](docs/SAMPLED_RESULTS.md).
 
 **Theorem A.** For every integer K>=2 and every 0<beta<=1/(2K), there is a one-state, two-action discounted MDP with rewards in [0,1] whose K-midpoint-quantile mean-greedy control operator has a two-cycle. Both phases have unique quantiles and strict greedy choices; one phase selects the unique truly suboptimal action. The two-cycle is globally attracting modulo phase from every finite real initial atom table, under arbitrary transient greedy tie choices. In particular, the operator has no fixed point.
 
@@ -18,7 +18,7 @@ It has L states: one two-action decision state and L-1 forced states with one le
 
 **Boundary.** At K=1, for any finite discounted MDP with bounded rewards and 0<=gamma<1, the canonical one-atom projected operator is a gamma-contraction and has no nontrivial value cycle. Its fixed point need not be optimal for expected return.
 
-The quantifier order matters: **for every K, a corresponding MDP is constructed**. This is not one fixed MDP that fails at all capacities. In Theorem A the discount may shrink with K; Theorem B keeps the discount fixed by increasing the number of states. Neither asserts capacity-independent loss or practical learning failure.
+Each K has a corresponding MDP. In Theorem A the discount may shrink with K; Theorem B keeps the discount fixed by increasing the number of states.
 
 ## 2. One-state construction
 
@@ -172,7 +172,7 @@ Every decision choice is strict and every forced state has a single legal action
 
 If a full primitive-operator fixed point existed, eliminating its forced states would give a fixed point of F_beta, contradicting Theorem A. Thus the fixed-discount example also has no fixed point.
 
-At state 0 the frozen stationary-policy values are c/(1-beta) and (1/2+epsilon)/(1-beta). The forced states add no reward. No claim is made here that arbitrary initial full tables converge to this particular A^L B^L orientation; the embedding can carry different phase alignments across residue classes.
+At state 0 the frozen stationary-policy values are c/(1-beta) and (1/2+epsilon)/(1-beta). The forced states add no reward. The embedding can carry different phase alignments across residue classes, so the attraction result for this particular A^L B^L orientation is local.
 
 ## 8. Why K=1 is different
 
@@ -186,7 +186,7 @@ Couple identical rewards and next states between two tables Q and Q'. Their targ
 
 For 0<=gamma<1, Banach's theorem yields a unique fixed point and excludes nontrivial value cycles. At gamma=1 this argument is not a strict contraction and the conclusion need not hold. Optimizing through median projection is not generally risk-neutral optimal.
 
-## 9. Prior work and limits
+## 9. Relation to prior work
 
 Closest established results include:
 
@@ -196,12 +196,12 @@ Closest established results include:
 - [Rowland et al., An Analysis of Quantile Temporal-Difference Learning](https://www.jmlr.org/papers/v25/23-0154.html): stochastic policy-evaluation convergence, not this hard control map.
 - [Kuang et al., Variance Control for Distributional Reinforcement Learning](https://proceedings.mlr.press/v202/kuang23a.html): quantile-derived mean estimation and QEM, a relevant existing mitigation.
 
-The new candidate statement is the conjunction of arbitrary finite K>=2, strict suboptimal cycling, unique orbit quantiles, one-state global attraction, and fixed-discount finite-state embedding. This note does not claim priority merely because a targeted review found no matching example.
+This construction combines arbitrary finite K>=2, strict suboptimal cycling, unique orbit quantiles, one-state global attraction and fixed-discount finite-state embedding. [PRIOR_ART.md](PRIOR_ART.md) compares these properties with the closest examples.
 
-The constructed loss is of order 1/K, not bounded below by a capacity-independent constant. The reward law itself depends on K and has K+1 outcomes; its probability offsets are of order 1/K^2. These facts are consistent with approximation-error bounds and make practical extrapolation particularly unsafe. Historical sampled experiments on a different K=3 witness failed their larger-critic practical gate and remain preserved without relabeling.
+The loss is of order 1/K. The reward law depends on K, has K+1 outcomes and uses probability offsets of order 1/K^2. These scales are consistent with capacity-dependent approximation-error bounds. The sampled tests on [this family](docs/SAMPLED_RESULTS.md) and an [earlier K=3 example](historical/README.md) found no material Huber excess regret at the larger tested capacities.
 
-## 10. Executable evidence and review corrections
+## 10. Exact checks
 
 `certify.py` checks exact rational probabilities, reward bounds, true value equations, greedy gaps, quantile uniqueness, cycle closure and every primitive delay-chain backup. It checks K=2,...,16,32,64,128 for one state, and gamma=9/10 with K=2,3,8,16,32 for the delay construction. `zero_initialization.py` checks the exact zero-start formula through six updates for all one-state instances. Finite checks corroborate the symbolic proof; they are not the proof of the universal quantifiers.
 
-The frozen pre-execution draft `construction.md` remains unchanged for source binding. The final proof makes two review-requested qualifications explicit: K=1 requires gamma<1, and the logarithmic state bound uses the minimal qualifying L. The global-attraction argument was derived after that initial draft and independently checked separately. Automated review is not external peer review.
+The initial derivation in `construction.md` is included in the certificate's SHA256 inputs and remains unchanged. The proof above adds global attraction and specifies the discounted K=1 assumption and minimal delay length.

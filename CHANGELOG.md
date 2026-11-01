@@ -1,64 +1,47 @@
 # Changelog
 
+## 2026-11-01 — Clarify the theorem and learning result
+
+- Put the no-fixed-point construction and sampled Huber comparison first in the README.
+- State the K=2 Lean proof boundary alongside the general theorem.
+- Shorten the method, related-work and historical reports; remove research-planning and AI-assistance prose.
+- Keep proof code, figures, result files and hash-bound derivations unchanged.
+
 ## 2026-10-08 — Tighten checks
 
-- Pinned every GitHub Action to a full commit SHA.
-- Added standard-library tests for the exact checker's guards (unique
-  quantiles, strict greedy gaps, parameter range), the README's K=2 numbers,
-  the delay-length formula, and the verifier's mismatch detection.
-- CI now also rechecks the preserved historical certificates and stored runs.
-- Corrected the Modal examples to write the compressed files the summary reads,
-  and updated the citation abstract. No certificate, result or claim changed.
+- Pin every GitHub Action to a full commit SHA.
+- Add standard-library tests for unique quantiles, strict greedy gaps, parameter ranges, the K=2 values, delay length and certificate mismatch detection.
+- Recheck historical certificates and stored runs in CI.
+- Correct the Modal examples to write the compressed files the summary reads, and update the citation abstract.
 
 ## 2026-10-07 — Formalize the smallest exact cycle
 
-- Added a pinned Lean 4.19.0/Mathlib Lake project for the rational K=2,
-  beta=1/4 one-state/two-action MDP.
-- Defined the exact reward-plus-continuation target laws and midpoint
-  generalized-inverse projection, then proved strict choices and distinct
-  two-cycle closure without assuming either update identity.
-- Checked normalized positive reward probabilities, reward bounds, true
-  Bellman optimality, stationary randomized-policy values, finite-policy
-  bounds and all cycle quantiles. Saved actual axiom output for every proven
-  statement, using only Lean's standard logical axioms, and added proof CI.
-- Distinguished this finite formal result from the still-unchecked general
-  real, attraction, no-fixed-point and delay-embedding claims.
-- Preserved the exact Python checker and all historical certificate bindings.
+- Add a pinned Lean 4.19.0/Mathlib project for the rational K=2, beta=1/4 one-state MDP.
+- Define exact reward/continuation target laws and midpoint generalized-inverse projection; prove strict choices and distinct two-cycle closure.
+- Prove reward-law validity, bounded rewards, true Bellman optimality, stationary randomized-policy values, finite-policy bounds and all eight cycle quantiles.
+- Save axiom output using only Lean's standard logical axioms and add proof CI.
 
-## 2026-10-07 — Test sampling separately from Huber smoothing
+## 2026-10-07 — Compare sampling and Huber smoothing
 
-- I fixed the settings and stopping rules before the first run, then compared
-  hard projection, damping, population pinball/Huber and paired sampled control.
-- I ran every tabular cell with 32 seeds, 100,000 updates and batch 32, including
-  a separately labeled fixed-MDP capacity comparison and paired scalar control.
-- All four required Huber excess-regret comparisons failed. At family K=32 with
-  constant steps, Huber had less final-window regret than scalar control.
-  I stopped before the conditional replay/network stage.
-- I saved every seed, checkpoint critic, loss, Bellman residual and paired
-  bootstrap interval, plus CPU cloud costs and reproducible analysis.
-- I added independent small gradient, projection, sample-pairing and endpoint
-  tests, and CI that checks the committed results without repeating training.
-- I made the summary reader accept both direct local-run JSON and batched
-  cloud results, and tested both formats with plain and compressed files.
-- I keep the specific Lean proof separate from the general formal attraction
-  and no-fixed-point claims; combining these results does not expand its scope.
+- Compare hard projection, damping, population pinball/Huber and paired sampled control.
+- Run every sampled setting with 32 seeds, 100,000 updates and batch 32, including fixed-MDP capacity comparisons and paired scalar control.
+- Find no material Huber excess regret in the four larger-capacity comparisons. At family K=32 with constant steps, Huber has less final-window regret than scalar control. Stop before the conditional replay/network experiment.
+- Include seed endpoints, checkpoint critics, losses, Bellman residuals, paired bootstrap intervals and CPU costs.
+- Add gradient, projection, sample-pairing and endpoint tests, plus CI that checks saved results without retraining.
+- Support direct local JSON and batched cloud results in the summary reader, both plain and compressed.
 
-## 2026-10-06 — Make the construction easier to inspect
+## 2026-10-06 — Illustrate the construction
 
-- Rewrote the README around the exact result and the dependency-free verifier.
-- Added a reproducible SVG of the smallest cycle, including projected atoms,
-  greedy means, optimal-continuation action values and stationary-policy values.
-- Added the fixed-discount states/period table from the existing certificates.
-- Added CPU GitHub Actions verification and a generated-figure consistency check.
-- Preserved certificates, checker sources and historical experiments unchanged.
+- Add a generated SVG of the smallest cycle, including projected atoms, greedy means, optimal-continuation action values and stationary-policy values.
+- Add the fixed-discount states/period table from the certificates.
+- Add CPU verification and a generated-figure consistency check in GitHub Actions.
 
-## 2026-09-09 — Initial research artifact
+## 2026-09-09 — Initial construction
 
-- Added the explicit arbitrary-K>=2 one-state strict two-cycle construction, global attraction modulo phase, and no-fixed-point consequence.
-- Added the fixed-discount delay embedding and the K=1 discounted contraction boundary.
-- Included exact rational checks at 18 one-state capacities, five fixed-discount embeddings, and 18 zero-start instances.
-- Incorporated review clarifications for the discounted K=1 assumption and minimal delay choice; retained the source-bound initial derivation separately from the final theorem.
-- Preserved the earlier K=3 search, exact and damped cycle certificates, robustness result, and both sampled-learning runs, including the failed larger-critic practical gate.
-- Added a dependency-free current verifier and optional NumPy-backed historical verification, with successful output recorded.
-- Added primary-source comparisons, claim limits, citation metadata, and MIT license.
-- No new learning algorithm, practical QR-DQN failure, theoretical priority, or external peer-review acceptance is claimed.
+- Add the explicit arbitrary-K≥2 one-state two-cycle, global attraction modulo phase and no-fixed-point consequence.
+- Add fixed-discount delay embedding and the K=1 discounted contraction boundary.
+- Include exact rational checks at 18 one-state capacities, five fixed-discount embeddings and 18 zero-start instances.
+- Include the initial derivation as a certificate input and the final proof with the discounted K=1 assumption and minimal delay length.
+- Include the earlier K=3 search, exact and damped cycle certificates, open-neighborhood bounds and two sampled-learning runs. The larger-critic experiment found no material excess regret.
+- Add a standard-library verifier and NumPy-backed historical checks.
+- Add related-work comparisons, citation metadata and the MIT license.

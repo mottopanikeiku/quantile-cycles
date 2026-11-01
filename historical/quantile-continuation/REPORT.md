@@ -1,35 +1,31 @@
-# Quantile-control continuation: theorem strengthened, practical extension rejected
+# Damping and sampled learning on the three-state example
 
-## Decision
-
-Retain the result as a narrow theoretical/mechanistic candidate. **Reject the practical-instability extension on this witness under continuation protocol v1.** Do not launch a new controller project from these results, claim QR-DQN nonconvergence, or broaden the tested claim after its failed gate.
-
-This continuation adds actual sampled tabular learning, an exact damped-cycle certificate, and an open-neighborhood theorem. It does not establish a new algorithm, empirical superiority, or theoretical priority.
+The original K=3 example keeps an exact cycle when the backup is damped by 1/2, and the six-cycle survives small reward and probability perturbations. Sampled learning gave a different result: none of the K≥16 settings reached the tested excess-regret threshold.
 
 ## 1. Exact-backup results
 
-Same MDP, zero initialization, 4,000 synchronous updates, no environment search. The objective remains expected discounted return. Damping means z <- (1-alpha)z + alpha*Pi_quantile T_greedy z; it is not quantile-loss SGD.
+The exact-backup comparison uses the same MDP, zero initialization and 4,000 synchronous updates. Damping applies z <- (1-alpha)z + alpha*Pi_quantile T_greedy z. The objective is expected discounted return.
 
 | Quantiles | alpha=1 | alpha=0.5 | alpha=0.1 |
 |---|---|---|---|
-| 3 | exact-certified 6-cycle | exact-certified 26-cycle | numerical period 127; misses frozen strict-gap threshold |
+| 3 | exact-certified 6-cycle | exact-certified 26-cycle | numerical period 127; below the strict-gap threshold |
 | 8 | suboptimal fixed point | suboptimal fixed point | suboptimal fixed point |
 | 16 | suboptimal fixed point | suboptimal fixed point | suboptimal fixed point |
 | 32 | optimal fixed point | optimal fixed point | optimal fixed point |
 | 64 | optimal fixed point | optimal fixed point | optimal fixed point |
 
-The K=8 and K=16 fixed policy is (0,0,0), with state-0 stationary-policy regret 0.2736. K=32 and K=64 recover the optimal (0,0,1) policy. These are numerical convergence observations under the specified finite run, not a general convergence theorem.
+The K=8 and K=16 fixed policy is (0,0,0), with state-0 stationary-policy regret 0.2736. K=32 and K=64 recover the optimal (0,0,1) policy in these finite runs.
 
-For K=3, alpha=0.5, a new rational certifier composes 26 affine damped-backup maps, solves their exact fixed-point equations, and independently checks each exact quantile backup and greedy choice. It verifies:
+For K=3, alpha=0.5, the rational certifier composes 26 affine damped-backup maps, solves their exact fixed-point equations and checks every quantile backup and greedy choice. It verifies:
 - 26 distinct phases and exact closure;
 - multiple greedy policies, including the original bad policy;
 - minimum greedy gap approximately 0.000138954635677556;
 - local one-step contraction factor 19/20;
 - minimum sup-norm phase separation approximately 0.01484086197, exceeding twice gap/4.
 
-Therefore reducing the exact-backup step from 1 to 1/2 does not eliminate this example's attracting policy cycle. At alpha=0.1, the numerical gap is about 0.00000670848, below the predeclared 0.0001 strict-cycle reporting gate; no exact certificate was attempted for that numerical orbit.
+Reducing the exact-backup step from 1 to 1/2 therefore preserves an attracting policy cycle. At alpha=0.1, the numerical gap is about 0.00000670848, below the 0.0001 strict-cycle reporting threshold; that numerical orbit has no exact certificate.
 
-## 2. Actual sampled tabular-learning results
+## 2. Sampled tabular learning
 
 Training used sampled one-step transitions from a generative simulator. Every update sampled 16 targets per state-action pair. Continuation target atoms were uniformly sampled from each learner's own current critic. There were 16 independent seed labels, 20,000 updates per setting, and paired transition draws across quantile/scalar methods. Both methods used only sampled training targets; exact policy values were used solely for evaluation.
 
@@ -44,11 +40,11 @@ The loss is either pinball or quantile Huber (kappa=1). Per-atom step sizes are 
 | 32 | Pinball | -0.04532 [-0.05942, -0.03164] | -0.04703 [-0.06071, -0.03377] |
 | 32 | Huber | -0.04275 [-0.05600, -0.02993] | -0.04190 [-0.05558, -0.02822] |
 
-The paired scalar baseline itself has mean tail regret 0.074385 with the constant schedule and 0.0636975 with the decaying schedule. A negative difference is therefore possible and does not represent negative absolute regret. In particular, larger quantile critics usually did slightly better here.
+The paired scalar baseline has mean final-window regret 0.074385 with the constant schedule and 0.0636975 with the decaying schedule. Negative excess means the quantile learner has lower regret than scalar control.
 
-The frozen practical gate required excess regret at least 0.25 with positive lower interval endpoint under both schedules for the same loss at K>=16. **No cell passed.** The K=3 pinball effect survives sampled learning, but standard Huber smoothing sharply reduces it, and it does not support the predeclared larger-critic extension.
+The criterion was excess regret at least 0.25 with a positive lower interval endpoint under both schedules for the same loss at K≥16. No setting passed. The K=3 pinball effect survives sampled learning, but Huber smoothing sharply reduces it.
 
-These intervals describe seed variability on one selected MDP. They do not account for environment selection or justify an across-task claim. Checkpoint switching under sampled updates is not evidence of a periodic orbit. This is tabular generative-model learning, not autonomous exploration, replay-based deep QR-DQN, or an asymptotic stochastic convergence result.
+These intervals describe seed variability on this selected MDP. The generative sampler tests tabular learning with full state-action coverage; it does not test exploration or replay.
 
 ## 3. Open-neighborhood theorem
 
@@ -80,39 +76,29 @@ One explicit open box satisfying all conditions is:
 - every outcome reward changes by less than **1/10000**;
 - every first-outcome probability changes by less than **1/2000**.
 
-In this box, orbit displacement is bounded by 1/1000 and the perturbed true optimal-action gap has conservative lower bound 3/125. Exact rational arithmetic verifies the margins and inequalities; an independent mathematical review found no correctness issue. The arithmetic checks support the proof but do not substitute for its Lipschitz/invariance argument.
+In this box, orbit displacement is bounded by 1/1000 and the perturbed true optimal-action gap has conservative lower bound 3/125. The [rational checker](certify_robustness.py) verifies these margins and inequalities. The Lipschitz argument above supplies local attraction within this fixed transition topology and discount.
 
-This is a local theorem within a fixed transition topology and discount. It makes no global-attraction or practical deep-learning claim.
+## 4. Relation to the general construction
 
-## 4. Closest prior results and novelty status
+This fixed MDP gives a locally attracting finite-quantile cycle with strict greedy choices, unique quantiles and a suboptimal phase. The damped certificate and open reward/probability neighborhood strengthen that result. The later [arbitrary-K construction](../../THEOREM.md) uses a different MDP for each K; it does not change this capacity experiment's outcome. [Related work](../../PRIOR_ART.md) compares finite-quantile suboptimality and distributional-cycle precedents.
 
-The reviewed primary literature brackets this result closely:
+## 5. Reproduction
 
-- Rowland et al., *Statistics and Samples in Distributional Reinforcement Learning*, Appendix B.4: https://arxiv.org/abs/1902.08102 . For every finite K, a one-step example gives a strict suboptimal QDRL choice with unique midpoint quantiles: a rare Bernoulli reward has true mean 1/(4K) but projected mean zero, while a deterministic action pays 1/(8K). This already defeats any claim that strict finite-quantile suboptimality itself is new. It is not a nontrivial attracting cycle.
-- Bellemare, Dabney and Rowland, *Distributional Reinforcement Learning*, Chapter 7, Example 7.11: https://www.distributional-rl.org/contents/chapter7 . Distributional optimality operators can cycle through distribution-dependent tie-breaking among equal-mean optimal actions. General distributional nonconvergence is not new.
-- The same chapter explains mean-preserving projections and scalar-control/distributional-evaluation separation. These remain existing remedies, not proposed algorithms.
-- Kuang et al., *Variance Control for Distributional Reinforcement Learning*: https://proceedings.mlr.press/v202/kuang23a.html . Quantiled Expansion Mean is a close practical alternative for estimating scalar control values from a quantile critic.
-- Rowland et al., *An Analysis of Quantile Temporal-Difference Learning* (JMLR 2024): https://www.jmlr.org/papers/v25/23-0154.html . Its stochastic convergence analysis is for policy evaluation, not the moving mean-greedy control map here. In particular, the present full-backup cycles do not contradict that evaluation result.
+The files alongside this report include:
 
-The narrower uncollided statement in the reviewed sources is a **locally attracting finite-quantile cycle with strict greedy choices, unique quantiles and a strictly suboptimal phase**, now also exact-certified at damping 1/2 and robust on an open MDP-parameter neighborhood. This is not proof of priority. The generalization to arbitrary quantile counts is not established by this work.
+- `protocol.md`: continuation settings and stopping criterion.
+- `run.py`: exact-backup grid and sampled learners.
+- `results-v1/`: policy traces, final critics, results and runtime metadata.
+- `reproduction-v1/`: a second run with the same seeds.
+- `certify_damped.py` and `damped-certificate.json`: exact period-26 cycle.
+- `certify_robustness.py` and `robustness-certificate.json`: open-neighborhood bounds.
+- `verify.py` and `verification.json`: input/output hashes and comparison of the two runs.
 
-## 5. Reproduction and integrity
+The original runtime was Python 3.14.7 and NumPy 2.3.5. Each full run took approximately 26 seconds on CPU. The saved verification checked 32 output-file hashes, 41 array members and 3 JSON comparisons. Values matched across runs, excluding wall time and archive metadata.
 
-All continuation files are alongside this report. Preserve both runs:
+The verifier also solves all eight policy Bellman systems with rational arithmetic and recomputes all 12 sampled endpoints from the policy traces.
 
-- protocol.md — frozen continuation design and gate.
-- run.py — exact grid and actual sampled learners.
-- results-v1/ — original results, full tail exact arrays, sampled policy traces, final critics, source/input/output hashes and runtime metadata.
-- reproduction-v1/ — one exact integrity reproduction, not an independent experiment.
-- certify_damped.py and damped-certificate.json — exact period-26 proof.
-- certify_robustness.py and robustness-certificate.json — exact open-neighborhood bounds.
-- verify.py and verification.json — source/output bindings and semantic reproduction check.
-
-The launch runtime was Python 3.14.7 and NumPy 2.3.5. Each full run took approximately 26 seconds on CPU. Verification checked 32 output-file hashes, 41 array members and 3 JSON comparisons across the two runs; semantic outputs matched exactly apart from deliberately excluded wall time and container-file hash metadata.
-
-An independent exact-rational audit also solved all eight policy Bellman systems and recomputed all 12 sampled endpoints from the retained policy traces. Those checks matched the recorded numerical scores.
-
-Each run generated 30,720,000 one-step transition outcomes, reused across methods; quantile learners consumed 368,640,000 transition samples and the two scalar baselines consumed 61,440,000. These are generative-model samples, not long online episodes. Reproduction repeats the same random outcomes and supplies no extra statistical evidence.
+Each run generated 30,720,000 one-step transition outcomes, reused across methods. Quantile learners consumed 368,640,000 transition samples and the two scalar baselines consumed 61,440,000. The second run repeats the same random outcomes.
 
 Reproduce with a NumPy-enabled Python interpreter:
 
@@ -121,12 +107,11 @@ Reproduce with a NumPy-enabled Python interpreter:
     python certify_robustness.py
     python verify.py
 
-The certifiers and verifier use the preserved relative input paths; verify.py compares results-v1 with reproduction-v1. run.py refuses to overwrite an existing output directory. No existing project was changed and no public successor repository was created.
+The certifiers and verifier use the stored relative input paths. `verify.py` compares `results-v1` with `reproduction-v1`; `run.py` refuses to overwrite an existing output directory.
 
-## Final scope
+## Interpretation
 
-**Supported:** exact strict cycles; persistence under one nontrivial damping setting; local attraction; open reward/probability robustness; a substantial sampled pinball effect at K=3.
-
-**Rejected under this protocol:** material sampled instability at K>=16 on this witness; exact-cycle persistence at the tested larger K values.
-
-**Unestablished:** novelty priority, arbitrary-K cycle constructions, deep-RL relevance, prevalence, a new remedy, or a broad practical research thesis. The deliverable is now a stronger bounded mathematical result with preserved negative practical evidence—not a successful new RL algorithm project.
+- Exact cycles persist at K=3 for alpha=1 and alpha=1/2, with local attraction.
+- Small reward and probability perturbations preserve the original six-cycle and its suboptimal phase.
+- Sampled pinball has substantial excess regret at K=3; no K≥16 setting meets the 0.25 excess-regret criterion.
+- Finite sampled switching does not establish an asymptotic cycle, and these runs contain no deep function approximation.

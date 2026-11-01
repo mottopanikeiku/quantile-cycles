@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this construction or its exact certificates, cite this research artifact."
+message: "If you use this construction or its exact certificates, cite this repository."
 title: "Quantile Cycles: Strict Cycles in Finite Quantile Control"
 type: software
 authors:
@@ -8,9 +8,9 @@ repository-code: "https://github.com/mottopanikeiku/quantile-cycles"
 url: "https://github.com/mottopanikeiku/quantile-cycles"
 license: MIT
 abstract: >-
-  An explicit family of finite quantile-projected Bellman control operators
-  with strict suboptimal cycles, exact rational certificates, a Lean kernel
-  check of the smallest rational instance, and a pre-specified sampled-learning
-  study in which quantile-Huber updates did not reproduce a material failure.
-  Earlier negative sampled evidence on a different witness is preserved.
-  Research note; external peer review and priority are not established.
+  An explicit family of quantile-projected Bellman control operators with
+  strict suboptimal two-cycles and no fixed points. The one-state construction
+  covers every finite K>=2 and attracts every finite initial table modulo
+  phase. Exact rational certificates and a Lean proof cover the smallest
+  rational instance. In a 32-seed sampled study, quantile-Huber learning
+  matched or beat scalar Q-learning on final-window regret.

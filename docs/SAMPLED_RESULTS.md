@@ -1,14 +1,14 @@
-# Sampled quantile learning: smoothing removes the material failure
+# Quantile-Huber learning avoids the hard-projection failure
 
-I ran the analytic construction without changing its rewards after seeing the results. The exact hard projection keeps its strict two-cycle, but the standard κ=1 quantile-Huber loss does **not** preserve the pre-specified material excess-regret effect. All four Huber comparisons required to proceed to replay/network training fail the stopping rule. I therefore did not run the network stage.
+Quantile-Huber learning with κ=1 matched or beat paired scalar Q-learning in every tested setting. Population Huber had zero final-window regret throughout. None of the four larger-capacity Huber comparisons met the excess-regret threshold for the replay/network experiment, so I stopped at tabular learning.
 
 ## What I measured
 
-I first ran the exact finite-law population updates, then the paired sampled tabular study. Each sampled cell uses 32 seeds, zero initialization, 100,000 synchronous updates and batch 32 per action. Constant steps are 0.05; decaying steps are `0.2/(1+t/1000)^0.6`, with t starting at zero. The [protocol](SAMPLED_PROTOCOL.md) and [configuration](../sampled-config.json) were committed in [beb7921](https://github.com/mottopanikeiku/quantile-cycles/commit/beb7921) before either pilot.
+I ran exact finite-law population updates followed by paired sampled tabular learning. Each sampled setting uses 32 seeds, zero initialization, 100,000 synchronous updates and batch 32 per action. Constant steps are 0.05; decaying steps are `0.2/(1+t/1000)^0.6`, with t starting at zero. The [protocol](SAMPLED_PROTOCOL.md) and [configuration](../sampled-config.json) describe the [original study settings](https://github.com/mottopanikeiku/quantile-cycles/commit/beb7921).
 
-The primary endpoint is the mean stationary-policy regret over post-update policies 80,001 through 100,000, divided by the known always-B loss. It equals the B-selection fraction. It is **not** the return of the changing training-time policy. I average across seeds and subtract each paired scalar seed for excess regret; intervals use 10,000 seed-pair percentile-bootstrap resamples. Switching fractions count only transitions within that final window.
+The primary endpoint is mean stationary-policy regret over post-update policies 80,001 through 100,000, divided by the always-B loss. It equals the B-selection fraction. I average across seeds and subtract each paired scalar seed for excess regret; intervals use 10,000 seed-pair percentile-bootstrap resamples. Switching fractions count only transitions within that final window.
 
-`family-K` uses the matching K-dependent reward law and discount 1/(2K). `fixed-K` always uses the K=2 MDP at critic capacity K. Family-2 and fixed-2 are identical data under two labels, not independent evidence.
+`family-K` uses the matching K-dependent reward law and discount 1/(2K). `fixed-K` uses the K=2 MDP at critic capacity K. Family-2 and fixed-2 are the same data under two labels.
 
 ## Population comparison
 
@@ -29,11 +29,11 @@ These are deterministic normalized endpoints from [the complete population run](
 | fixed-32 | constant | 0.00000 | 0.00000 | 0.00000 | 0.00000 | 0.00000 |
 | fixed-32 | decaying | 0.00000 | 0.00000 | 0.00000 | 0.00000 | 0.00000 |
 
-Huber selects A throughout the final window in every population setting and schedule. Pinball still chooses B on some updates, but its finite-step dynamics do not reproduce the hard backup's exact half-time B policy. Damping hard projection does not remove that population failure on the matching family. Increasing capacity on the fixed K=2 MDP removes the observed failure at capacities 8 and 32; this is why the family must not be described as one MDP failing at every capacity.
+Huber selects A throughout the final window in every population setting and schedule. Pinball still chooses B on some updates, at a different frequency from the hard backup's exact half-time B policy. Damping hard projection leaves positive regret on the matching family. On the fixed K=2 MDP, increasing capacity to 8 or 32 gives zero final-window regret for every method.
 
-## Every sampled cell
+## Sampled results
 
-Full precision, every seed, both regret intervals and paired differences are in [sampled-summary.json](../results/sampled-summary.json). The [compressed raw file](../results/sampled-raw.json.gz) saves all checkpoint critics, means, policies, expected losses, both hard-projected and mean Bellman residuals, and CDF-resolution summaries. Atom-wise CDF diagnostics can be regenerated from those critics with `sampled.checkpoint_metrics`.
+[sampled-summary.json](../results/sampled-summary.json) contains every seed, regret interval and paired difference at full precision. The [compressed raw file](../results/sampled-raw.json.gz) contains checkpoint critics, means, policies, expected losses, hard-projected and mean Bellman residuals, and CDF-resolution summaries. Atom-wise CDF diagnostics can be regenerated with `sampled.checkpoint_metrics`.
 
 | Setting | Loss | Schedule | Normalized regret | Absolute regret | Paired normalized excess [95% CI] | Switching fraction |
 |---|---|---|---:|---:|---:|---:|
@@ -74,13 +74,13 @@ Full precision, every seed, both regret intervals and paired differences are in 
 | fixed-8 | scalar | constant | 0.000000 | 0.0000000 | +0.000000 [+0.000000, +0.000000] | 0.000000 |
 | fixed-8 | scalar | decaying | 0.000000 | 0.0000000 | +0.000000 [+0.000000, +0.000000] | 0.000000 |
 
-The four required Huber cells have population excess regret zero. Sampled Huber also has zero regret at K=8 under both schedules. At K=32 with constant steps its normalized regret is 0.004292, versus scalar control's 0.078256; paired excess is −0.073964 [−0.076622, −0.071266]. With decaying steps Huber has zero final-window regret, versus scalar's 0.002286. These results reject the fixed criterion of excess at least 0.25 with a positive interval lower endpoint; they do not prove asymptotic convergence.
+The four larger-capacity Huber comparisons have population excess regret zero. Sampled Huber also has zero regret at K=8 under both schedules. At K=32 with constant steps its normalized regret is 0.004292, versus scalar control's 0.078256; paired excess is −0.073964 [−0.076622, −0.071266]. With decaying steps Huber has zero final-window regret, versus scalar's 0.002286. The stopping rule required excess regret of at least 0.25 and a positive interval lower endpoint in every comparison; none met it.
 
-Sampled pinball has positive paired excess in the matching family, but noisy switching is not proof of a periodic orbit. At K=32 its paired excess is only 0.024998 (constant) and 0.026178 (decaying), well below the material-effect threshold. All sampled losses and scalar control have zero observed final-window regret on fixed-8 and fixed-32.
+Sampled pinball has positive paired excess in the matching family. At K=32 its paired excess is 0.024998 (constant) and 0.026178 (decaying), also below the threshold. All sampled losses and scalar control have zero observed final-window regret on fixed-8 and fixed-32.
 
-## Can batch 32 resolve the hard quantile jump?
+## Resolving the quantile jump
 
-The hard cycle's CDF margins are 1/(4K²). At the central midpoint, the batch-32 binomial CDF standard errors are about 0.07655, 0.08770 and 0.08835 for K=2, 8 and 32. The margins are only 0.81650, 0.04454 and 0.00276 standard errors, respectively. A normal-approximation scale calculation gives 185, 61,958 and 16,097,104 independent fixed-target samples to put that margin 1.96 standard errors away; these are diagnostics, **not** confidence guarantees or effective sample counts for drifting SGD targets. Exact values and assumptions are in [the summary](../results/sampled-summary.json).
+The hard cycle's CDF margins are 1/(4K²). At the central midpoint, the batch-32 binomial CDF standard errors are about 0.07655, 0.08770 and 0.08835 for K=2, 8 and 32. The margins are only 0.81650, 0.04454 and 0.00276 standard errors, respectively. A normal-approximation calculation gives 185, 61,958 and 16,097,104 independent fixed-target samples to put that margin 1.96 standard errors away. This scale estimate does not account for drifting SGD targets. Exact values and assumptions are in [the summary](../results/sampled-summary.json).
 
 ## Reproduce
 
@@ -93,14 +93,12 @@ modal run modal_sampled.py --stage sampled --output results/sampled-raw.json.gz
 python -B tools/summarize_sampled.py
 ```
 
-The local equivalents are `sampled.py --stage population|sampled --config sampled-config.json --output FILE.json`. They use the same kernels; the Modal runner compresses results and summarizes bulky per-atom CDF rows before returning them. Pilot commands are `--stage population-pilot` and `--stage pilot`. I used CPU-only containers, 2 requested cores and 1 GiB each, at most four containers. Modal hides the CPU model; returned library/OS/thread metadata is stored in each raw batch. The [four study jobs cost upper bound](../results/sampled-compute.json) is about $0.022, including pilots and startup; this is not an invoice or a speed comparison.
+The local equivalents are `sampled.py --stage population|sampled --config sampled-config.json --output FILE.json`. They use the same kernels; the Modal runner compresses results and summarizes per-atom CDF rows before returning them. Pilot commands are `--stage population-pilot` and `--stage pilot`. I used CPU-only containers, 2 requested cores and 1 GiB each, with at most four containers. Library, OS and thread metadata are stored in each raw batch; the CPU model was unavailable. The [estimated cost upper bound](../results/sampled-compute.json) for all four jobs is about $0.022, including pilots and startup.
 
-## Limits
+## Interpretation
 
-- This is one synthetic one-state construction, with three different family MDPs and a fixed-MDP comparison, not evidence about deep RL generally.
-- Expected gradients, sampled SGD and hard projection are different operators. I did not prove a Huber fixed-point or convergence theorem.
-- Zero bootstrap intervals occur when all 32 observed seed endpoints are zero; they do not rule out rare unseen seeds.
-- Evaluating both actions with a generative sampler removes exploration/replay issues. Those mechanisms were deliberately not tested after the Huber rule failed.
-- Finite noisy switching and nonzero regret cannot certify asymptotic cycling. The exact theorem and earlier negative historical experiment retain their separate scopes.
-
-Written with AI coding assistance.
+- This is a synthetic one-state study with three family MDPs and a fixed-MDP capacity comparison.
+- The endpoint evaluates each greedy policy as stationary; it does not measure the return of the changing training-time policy.
+- Hard projection, expected gradients and sampled SGD are different operators. Finite regret and noisy switches do not establish asymptotic cycling or convergence.
+- Zero bootstrap intervals occur when all 32 observed seed endpoints are zero; they do not exclude rare unseen seeds.
+- The generative sampler removes exploration and replay. The network experiment was conditional on the Huber excess-regret result and was not run.

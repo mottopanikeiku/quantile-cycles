@@ -1,40 +1,51 @@
 # Quantile Cycles
 
-I give an exact counterexample to hard quantile-projected Bellman control, with a sampled test that separates this operator from quantile-Huber learning.
+Quantile-projected Bellman control can have no fixed point, even in a one-state MDP with a unique optimal action. I construct a strict two-cycle for every finite quantile count K≥2: the greedy policy alternates between the optimal action and a worse one.
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="docs/hero-dark.svg"><img alt="Under exact quantile-projected Bellman iteration the greedy action alternates between the optimal and a worse action at every step; there is no fixed point." src="docs/hero-light.svg" width="600"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="docs/hero-dark.svg"><img alt="Exact quantile-projected Bellman updates alternate between the optimal and a worse action." src="docs/hero-light.svg" width="600"></picture>
 
-**Question:** can a mean-greedy quantile critic alternate forever between the optimal and a worse action—and does that failure survive standard Huber updates?
+The sampled result goes the other way. Across 32 seeds and 100,000 updates per setting, quantile-Huber learning matched or beat scalar Q-learning on final-window regret. At family K=32 with constant steps, Huber chose the worse action on 0.43% of updates, versus 7.83% for scalar control. [Full results](docs/SAMPLED_RESULTS.md).
 
-I constructed a one-state MDP with a strict two-cycle and no fixed point for the hard projected operator ([proof](THEOREM.md), [exact checker](certify.py)). I then ran population and paired sampled learning ([code](sampled.py), [protocol](docs/SAMPLED_PROTOCOL.md)).
+## Check the result
 
-**Result:** the exact cycle exists, but the pre-specified material Huber failure does not. I ran **32 seeds × 100,000 updates**, with **32 target pairs per action**. All four required Huber comparisons failed the stopping rule, so I did not run replay/network training ([complete results](results/sampled-summary.json)).
+The exact certificates need only Python's standard library:
 
-## Reproduce
+```sh
+python -B verify.py
+```
 
-Check the exact certificates, saved-data analysis and formal proof with Python 3.11 and elan:
+With Python 3.11, check the sampled analysis without retraining:
 
 ```sh
 python -m pip install -r requirements-sampled.txt
-python -B verify.py && python -B tools/summarize_sampled.py --check
-cd lean && lake exe cache get Mathlib.Data.Rat.Defs Mathlib.Tactic.NormNum Mathlib.Tactic.Linarith && lake build
+python -B tools/summarize_sampled.py --check
 ```
 
-The exact verifier alone needs only Python's standard library. [Full training commands](docs/SAMPLED_RESULTS.md#reproduce) are separate from these checks.
+The Lean proof uses the pinned toolchain in `lean/` and requires [elan](https://github.com/leanprover/elan):
 
-## The exact result
+```sh
+cd lean
+lake exe cache get Mathlib.Data.Rat.Defs Mathlib.Tactic.NormNum Mathlib.Tactic.Linarith
+lake build
+```
+
+## The construction
 
 ![Two exact critic phases make the greedy action flip, although expected rewards favor A.](docs/two-phase-cycle.svg)
 
-For **K=2**, discount **1/4**, A pays **91/128**. B pays **0, 1/2, 1** with probabilities **3/16, 1/2, 5/16**. Both projected greedy gaps are **3/128**, while A's true reward advantage is **19/128** and always B loses **19/96** in discounted value ([certificate](results/certificates.json)).
+The smallest example has K=2 and discount 1/4. Action A pays 91/128. Action B pays 0, 1/2 and 1 with probabilities 3/16, 1/2 and 5/16. Both actions return to the same state.
 
-The [paper proof](THEOREM.md) constructs a corresponding MDP for every **K≥2**, with **0<β≤1/(2K)**. Every finite real initial table approaches its strict two-cycle modulo phase, including arbitrary transient tie choices; hence there is no fixed point. For a prescribed discount **0<γ<1**, a delay chain gives **L=ceil(log(2K)/(−log γ))** states and exact period **2L**, with local—not common-phase global—attraction. The [stored certificates](results/certificates.json) check periods **28, 36, 54, 66, 80** at γ=9/10.
+Exact midpoint-quantile backups swap the two critic tables shown above. Both greedy choices are strict, with gap 3/128. A's true reward advantage is 19/128; always choosing B loses 19/96 in discounted value. These fractions are checked in [the exact certificate](results/certificates.json).
 
-I formalized the specific rational K=2 MDP in [`lean/QuantileCycles.lean`](lean/QuantileCycles.lean): valid bounded rewards, true Bellman facts, actual target laws, all eight generalized-inverse quantiles and the strict, distinct two-cycle. It is checked by Lean's kernel with no sorry and no axioms beyond Lean's standard three (propext, Classical.choice, Quot.sound); [all 22 axiom listings](results/lean-axioms.txt) are saved. The real arbitrary-K theorem, attraction, absence of other fixed points, delay embedding and K=1 boundary are not formalized. A checked cycle alone does not exclude other fixed points.
+The [general proof](THEOREM.md) constructs a corresponding MDP for each K≥2 and discount 0<β≤1/(2K). Every finite real initial table approaches its two-cycle modulo phase, including arbitrary transient tie choices. This rules out fixed points. For a prescribed 0<γ<1, a delay chain gives L=ceil(log(2K)/(−log γ)) states and exact period 2L, with local attraction. At γ=9/10, the certificates check periods 28, 36, 54, 66 and 80.
 
-## What changed under learning
+The [Lean formalization](lean/QuantileCycles.lean) proves the rational K=2, β=1/4 instance: valid bounded reward laws, true Bellman values, all eight generalized-inverse quantiles, strict greedy choices and a distinct two-cycle. The [saved build](results/lean-build.json) and [axiom output](results/lean-axioms.txt) use only Lean's standard logical axioms. The arbitrary-K theorem, attraction, absence of other fixed points, delay embedding and K=1 boundary are proved in the research note, outside the formalization.
 
-The table reports normalized final-window stationary-policy regret: the fraction of greedy choices that are B, averaged over seeds. Each pair is **constant / decaying** steps. These family rows use different K-dependent MDPs.
+## Learning on the same family
+
+I compared hard projection, damped projection, population pinball/Huber gradients and sampled learning. Each sampled run used 32 target pairs per action per update, zero initialization and a paired scalar baseline. The [study protocol](docs/SAMPLED_PROTOCOL.md) gives the updates and stopping rule.
+
+The table shows the fraction of greedy choices that were B during updates 80,001–100,000, averaged over seeds. This is stationary-policy regret normalized by the always-B loss. Each entry is constant / decaying step size; each family row uses a different K-dependent MDP.
 
 | Family K | Sampled pinball | Sampled Huber κ=1 | Paired scalar |
 |---:|---:|---:|---:|
@@ -42,20 +53,18 @@ The table reports normalized final-window stationary-policy regret: the fraction
 | 8 | 0.07916 / 0.11637 | 0 / 0 | 0 / 0 |
 | 32 | 0.10325 / 0.02846 | 0.00429 / 0 | 0.07826 / 0.00229 |
 
-Source: [all cells, seeds and intervals](results/sampled-summary.json); [raw checkpoints](results/sampled-raw.json.gz). Population Huber has zero final-window regret in every setting. At K=32 with constant steps, sampled Huber's paired normalized excess is **−0.07396**, with **95% CI [−0.07662, −0.07127]**. It is better than this scalar baseline, not a practical failure.
+Population Huber had zero final-window regret in every setting. At K=32 with constant steps, Huber picked the worse action about 7.4 percentage points less often than scalar Q-learning in the final window (95% interval 7.1–7.7 points). None of the four Huber comparisons met the excess-regret threshold for running the replay/network experiment, so I stopped at tabular learning.
 
-I also held the K=2 MDP fixed while increasing critic capacity to 8 and 32: all sampled losses had zero observed final-window regret. [The full report](docs/SAMPLED_RESULTS.md) includes damped hard backups, absolute regret, switching rates and the shrinking CDF margins. Noisy switches do not certify a periodic orbit.
+Holding the K=2 MDP fixed and increasing critic capacity to 8 or 32 gave zero observed final-window regret for every sampled loss. [All seeds and intervals](results/sampled-summary.json), [raw checkpoints](results/sampled-raw.json.gz) and [training commands](docs/SAMPLED_RESULTS.md#reproduce) are available.
 
-## Limits
+## Interpretation
 
-- The family changes with K; it is not one MDP failing at every capacity.
-- Hard quantile projection, pinball SGD and Huber SGD are different operators.
-- Finite runs do not prove asymptotic convergence or nonconvergence; zero seed-bootstrap intervals do not exclude rare unseen seeds.
-- This generative-sampler tabular study has no exploration, replay, target networks or meaningful generalization test.
-- The general theorem is not Lean-checked or externally peer-reviewed. Earlier sampled work on a different witness remains [negative](historical/README.md); priority is unestablished.
+- The reward law changes with K, and the constructed loss shrinks with K.
+- Hard quantile projection, pinball SGD and Huber SGD are different operators. Finite noisy switches do not establish an asymptotic periodic orbit.
+- The experiments use a tabular generative sampler, without exploration, replay or target networks. Zero observed regret across 32 seeds does not exclude rare failures.
+
+An [earlier three-state example](historical/README.md) also cycles under exact backups, while its sampled larger-critic experiment found no material excess regret.
 
 ## Prior work
 
-I build on [Dabney et al.'s quantile projection and Huber loss](https://arxiv.org/abs/1710.10044), [Rowland et al.'s finite-quantile suboptimality examples](https://proceedings.mlr.press/v97/rowland19a.html), and [distributional control nonconvergence examples](https://www.distributional-rl.org/contents/chapter7). [PRIOR_ART.md](PRIOR_ART.md) distinguishes this construction from those results.
-
-Written with AI coding assistance.
+I build on [Dabney et al.'s quantile projection and Huber loss](https://arxiv.org/abs/1710.10044), [Rowland et al.'s finite-quantile suboptimality examples](https://proceedings.mlr.press/v97/rowland19a.html), and [distributional control nonconvergence examples](https://www.distributional-rl.org/contents/chapter7). [PRIOR_ART.md](PRIOR_ART.md) compares their assumptions with this construction.

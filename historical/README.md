@@ -1,47 +1,41 @@
-# Preserved predecessor artifacts
+# Earlier three-state example
 
-These artifacts predate the arbitrary-K family in the repository root. They are retained to expose the full research trajectory, including a failed practical extension. Historical claims such as “arbitrary-K unestablished” describe the state at that stage, not the final theorem. Bound source files, protocols, outputs, and reports remain unchanged.
+Before the one-state arbitrary-K construction, I found a three-state, K=3 MDP with an exact six-cycle. Damping the backup by 1/2 gives an exact 26-cycle. Sampled learning at larger critic capacities did not reproduce the material excess-regret effect being tested.
 
-## Contents
+## Results and files
 
-- `quantile_control_baseline.py`, `quantile-control-baseline-result.json`, `quantile-control-thesis.md`: initial baseline probe.
-- `quantile_cycle.py`, `quantile-cycle-protocol.md`, `quantile-cycle-result.json`: bounded search and discovered three-state, K=3 witness.
-- `certify_quantile_cycle.py`, `quantile-cycle-certificate.json`: exact six-cycle, unique quantiles, strict action gaps, and genuine bad-policy loss.
-- `quantile-continuation/protocol.md`: frozen capacity/damping and sampled-learning continuation.
-- `quantile-continuation/run.py`: exact-backup sweeps and actual sampled tabular training.
-- `quantile-continuation/results-v1/` and `reproduction-v1/`: original run and independent deterministic reproduction, including policy traces, endpoints, and manifests.
-- `quantile-continuation/certify_damped.py`: exact period-26 certificate for alpha=1/2.
-- `quantile-continuation/certify_robustness.py`: exact open-neighborhood inequalities for the original six-cycle.
-- `quantile-continuation/verify.py`: bound input/output hashes, semantic reproduction, eight exact policy-value systems, and recomputed sampled endpoints.
-- [`quantile-continuation/REPORT.md`](quantile-continuation/REPORT.md): results and frozen decision.
+- [Original example](quantile-control-thesis.md): reward/transition table, exact six-cycle, local attraction and scalar baseline.
+- [Search protocol](quantile-cycle-protocol.md), `quantile_cycle.py` and `quantile-cycle-result.json`: the 512-MDP search and selected witness.
+- `certify_quantile_cycle.py` and `quantile-cycle-certificate.json`: exact cycle, unique quantiles, strict action gaps and bad-policy loss.
+- `quantile_control_baseline.py` and `quantile-control-baseline-result.json`: scalar-control comparison.
+- [Continuation report](quantile-continuation/REPORT.md): larger critics, damping, sampled learning and reward/probability perturbations.
+- `quantile-continuation/protocol.md` and `run.py`: continuation settings and experiment implementation.
+- `quantile-continuation/results-v1/` and `reproduction-v1/`: two runs with the same seeds, including policy traces, endpoints and manifests.
+- `quantile-continuation/certify_damped.py` and `certify_robustness.py`: exact period-26 and open-neighborhood checks.
 
-## The failed gate is part of the result
+The sampled experiment used 16 seeds, 20,000 updates per setting, paired transition draws, pinball and Huber losses, and constant/decaying schedules. The criterion was mean excess regret at least 0.25 with a positive lower 95% paired-bootstrap endpoint, under both schedules for the same loss at K≥16. No setting passed. K=3 pinball retained substantial excess regret, while Huber smoothing reduced it and larger critics usually matched or improved on scalar control.
 
-The sampled experiment used 16 seeds, 20,000 updates per setting, paired transition draws, pinball and Huber losses, and constant/decaying schedules. The practical gate required mean excess regret at least 0.25, with a positive lower 95% paired-bootstrap endpoint, under both schedules for the same loss at K>=16.
+The later [arbitrary-K theorem](../THEOREM.md) changes the MDP with K. The capacity comparison here holds this older MDP fixed.
 
-**No cell passed.** K=3 pinball retained substantial excess regret, but Huber smoothing greatly reduced it and larger critics did not support the predeclared claim. Finite-run checkpoint switching is not a certified periodic orbit. These data do not establish deep QR-DQN nonconvergence.
+## Check the stored runs
 
-The new theorem changes the MDP with K. It does not overturn this negative result on the older fixed witness.
-
-## Recheck stored evidence
-
-From the repository root, with NumPy installed (either requirements file works; CI uses `requirements-sampled.txt`):
+From the repository root, with NumPy installed:
 
 ```sh
 python -m pip install -r requirements-historical.txt
 python -B verify.py --historical
 ```
 
-The wrapper compares exact certificate JSON, rechecks manifests, compares stored arrays semantically, independently solves policy values, and recomputes sampled endpoints. It does not retrain.
+The wrapper compares exact certificates, checks input/output hashes, compares stored arrays, solves policy-value equations and recomputes sampled endpoints. It does not retrain. The continuation protocol remains unchanged because both run manifests check its SHA256.
 
-## Rerun the actual sampled experiment
+## Rerun the experiment
 
-Use a new output directory; the historical runner refuses to overwrite an existing one:
+Use a new output directory; the runner refuses to overwrite an existing one:
 
 ```sh
-.venv/bin/python -B historical/quantile-continuation/run.py --output runs/historical-rerun-v1
+python -B historical/quantile-continuation/run.py --output runs/historical-rerun-v1
 ```
 
-This runs the full frozen exact-backup and sampled-learning protocol and writes a new manifest. It does not replace the preserved v1 runs. Compare arrays and JSON semantically: NumPy ZIP archive container metadata need not be byte-identical. The existing historical `verify.py` intentionally compares the two preserved directories, not an arbitrary new run.
+This runs the exact-backup and sampled-learning experiments and writes a new manifest. Compare arrays and JSON values: NumPy ZIP archive metadata can differ between runs. The historical `verify.py` compares the two stored directories rather than an arbitrary new run.
 
-The retained protocol and runner bind their predecessor witness by relative path, so keep this directory layout intact. Generated local reruns are ignored by Git.
+Keep the directory layout intact; the runner and certifiers use relative paths to the original witness. Local `runs/` output is ignored by Git.
