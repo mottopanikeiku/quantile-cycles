@@ -32,7 +32,7 @@ A is better by 19/128. Run the exact quantile Bellman update, choosing the next 
 
 [`THEOREM.md`](THEOREM.md) generalizes the example on paper, not in Lean:
 
-- For every K ≥ 2 and discount β ≤ 1/(2K), a one-state MDP with rewards in [0,1] has a strict two-cycle. Every finite starting table converges to it up to phase, whatever the tie-breaking.
+- For every K ≥ 2 and discount 0 < β ≤ 1/(2K), a one-state MDP with rewards in [0,1] has a strict two-cycle. Every finite starting table converges to it up to phase, whatever the tie-breaking.
 - For a fixed discount γ, a delay chain of ⌈log(2K)/−log γ⌉ states gives an exact cycle of twice that length. The checked periods at γ = 0.9 run from 28 to 80.
 - K = 1 is the boundary: the one-atom operator is a γ-contraction and cannot cycle.
 

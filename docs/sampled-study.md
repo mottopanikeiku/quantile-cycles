@@ -11,7 +11,7 @@ Does the hard-projection cycle show up when the critic is trained by gradient st
 - Next action: the arithmetic mean of the current critic's atoms; A wins exact ties.
 - Score: the share of greedy choices that were the worse action B over updates 80,001 to 100,000. This equals stationary-policy regret divided by the always-B loss. Intervals are 10,000 percentile-bootstrap resamples over the 32 seed pairs.
 
-The plan was to follow up with a replay-buffer network experiment only if Huber showed excess regret of at least 0.25 over scalar control in all four K = 8 and K = 32 comparisons. None got there, so that experiment doesn't exist.
+A replay-buffer network experiment was planned only if Huber showed excess regret of at least 0.25 over scalar control in all four K = 8 and K = 32 comparisons. The Huber results did not meet that threshold, so the network experiment was not run.
 
 ## Results
 
