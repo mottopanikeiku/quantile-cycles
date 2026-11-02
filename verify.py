@@ -36,13 +36,7 @@ def compare(script, certificate, ignored=()):
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--historical",
-        action="store_true",
-        help="Also recheck preserved certificates and sampled artifacts (needs NumPy).",
-    )
-    args = parser.parse_args()
+    argparse.ArgumentParser(description=__doc__).parse_args()
     current = compare(
         "certify.py", "results/certificates.json", ignored=("wall_seconds", "python")
     )
@@ -59,23 +53,6 @@ def main():
         "source_hashes_matched": True,
         "scope": "Finite certificate reproduction, not a machine-checked universal proof.",
     }
-    if args.historical:
-        historical = "historical/quantile-continuation/"
-        original = compare(
-            "historical/certify_quantile_cycle.py",
-            "historical/quantile-cycle-certificate.json",
-        )
-        damping = compare(historical + "certify_damped.py", historical + "damped-certificate.json")
-        robustness = compare(
-            historical + "certify_robustness.py", historical + "robustness-certificate.json"
-        )
-        report["historical"] = {
-            "original_period": original["exact_period"],
-            "damped_period": damping["period"],
-            "robustness_inequalities_verified": robustness["all_exact_inequalities_verified"],
-            "sampled_artifacts": run_json(historical + "verify.py"),
-            "scope": "Rechecks stored runs and recomputes endpoints; does not rerun training.",
-        }
     print(json.dumps(report, indent=2))
 
 

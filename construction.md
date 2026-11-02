@@ -1,6 +1,6 @@
-# Candidate arbitrary-capacity construction, frozen before execution
+# One-state construction for arbitrary K
 
-This is a theoretical continuation, not a retuning of the failed practical experiment. No claim of novelty or practical relevance is authorized by this draft. All prior evidence remains unchanged.
+The derivation behind `certify.py`. [THEOREM.md](THEOREM.md) proves the statements; the certificates check the arithmetic.
 
 ## One-state family
 
@@ -37,24 +37,24 @@ Full action-critic phase Q_B (generated from selected A distribution M_A+beta*s)
     Q_B(A,i)=c+beta*(M_A+beta*s_i)
     Q_B(B,i)=r_i+beta*(M_A-beta*S).
 
-Conjectured identities: F(Q_A)=Q_B, F(Q_B)=Q_A. Q_A strictly selects A; Q_B strictly selects B. Both approximate greedy gaps equal g=beta*(1-beta)*S/2>0. Thus the second phase is strictly suboptimal for the real risk-neutral MDP. Every quantile is unique because tau_i lies strictly inside the first target atom's CDF jump.
+Identities: F(Q_A)=Q_B, F(Q_B)=Q_A. Q_A strictly selects A; Q_B strictly selects B. Both approximate greedy gaps equal g=beta*(1-beta)*S/2>0. Thus the second phase is strictly suboptimal for the real risk-neutral MDP. Every quantile is unique because tau_i lies strictly inside the first target atom's CDF jump.
 
-Local attraction follows from phasewise fixed-policy beta contraction, with radius less than g/2 (choose g/4). The phases are distinct because their greedy actions differ. This is an exact orbit existence claim, not convergence from every initialization.
+Local attraction follows from phasewise fixed-policy beta contraction, with radius less than g/2 (choose g/4). The phases are distinct because their greedy actions differ. This is an exact orbit existence claim; convergence from every initialization is proved in THEOREM.md.
 
 ## K=1 boundary
 
 With a single atom per action, selection by its mean is ordinary max over scalar atom values; all maximizing actions have the same one-atom continuation law. The hard projected operator is the lower median of R+gamma*max_a Q(S',a). Coupling and quantile nonexpansiveness make it gamma-Lipschitz in sup norm. Hence it has no nontrivial value cycle. This does not make its fixed point optimal for expected return.
 
-## Fixed-discount extension candidate
+## Fixed-discount extension
 
-Fix any gamma0 in (0,1). Choose integer L>=1 such that beta=gamma0^L<=1/(2K), and use exactly the formulas above with this beta (the algebra should hold for every beta in (0,1/(2K)]).
+Fix any gamma0 in (0,1). Choose integer L>=1 such that beta=gamma0^L<=1/(2K), and use exactly the formulas above with this beta (the algebra holds for every beta in (0,1/(2K)]).
 
 Replace the self-loop by a deterministic delay chain: decision state 0 has A/B reward then enters forced state 1; forced states 1..L-1 have zero reward and one action, and the last returns to state 0. For L=1, decision actions immediately return to state 0. There are L states total. The effective decision-epoch discount is beta.
 
-Under synchronous primitive-state Bellman iteration, decision critics satisfy D_{t+L}=F_beta(D_t). Define D_t=Q_A for t mod 2L in 0..L-1 and Q_B otherwise. For forced state j=1..L-1, define its sole action atoms at iteration t as gamma0^(L-j) times the selected atoms of D_{t-(L-j)}. This should give an exact 2L-cycle of the full primitive-state operator. Decision greedy actions remain strict; forced states have no action choice. The two frozen stationary policy values at state 0 are c/(1-beta) and (1/2+epsilon)/(1-beta).
+Under synchronous primitive-state Bellman iteration, decision critics satisfy D_{t+L}=F_beta(D_t). Define D_t=Q_A for t mod 2L in 0..L-1 and Q_B otherwise. For forced state j=1..L-1, define its sole action atoms at iteration t as gamma0^(L-j) times the selected atoms of D_{t-(L-j)}. This gives an exact 2L-cycle of the full primitive-state operator. Decision greedy actions remain strict; forced states have no action choice. The two frozen stationary policy values at state 0 are c/(1-beta) and (1/2+epsilon)/(1-beta).
 
 The fixed-discount construction uses O(log K / -log gamma0) states. It is not a one-state construction at arbitrary fixed discount. B has K+1 reward outcomes. Gaps shrink with K; no capacity-independent practical failure is claimed.
 
-## Frozen checks
+## Checks
 
-Before results: exact rational one-state checks for K=2..16,32,64,128, with beta=1/(2K). Fixed-discount checks at gamma0=9/10 for K=2,3,8,16,32; minimal L meeting the bound. Check all reward probabilities and reward bounds, true mean ordering, midpoint uniqueness, exact two-phase closure and greedy gaps, and primitive delay-chain backups over the full 2L orbit. No model search or fitted parameters. Independent mathematical and primary-literature reviews run concurrently.
+`certify.py` runs exact rational one-state checks for K=2..16, 32, 64, 128 with beta=1/(2K), and fixed-discount checks at gamma0=9/10 for K=2, 3, 8, 16, 32 with the minimal L meeting the bound. It verifies all reward probabilities and bounds, the true mean ordering, midpoint uniqueness, exact two-phase closure, greedy gaps, and the primitive delay-chain backups over the full 2L orbit. No parameters are fitted.

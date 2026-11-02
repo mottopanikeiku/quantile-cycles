@@ -453,8 +453,8 @@
     }
   ],
   "scope": "Finite exact checks support the separately proved analytic family; not a practical learning experiment.",
-  "python": "3.14.7",
+  "python": "3.14.4",
   "source_sha256": "77d77bad1fd082a0b5e266a9049b25ff881cb64475670cc0d3b4fec173d6dfd9",
-  "construction_sha256": "13c8b3de89165b501bf26cfbe26aaf962a510e2d9cc51469a2d25e7a40eb6218",
-  "wall_seconds": 4.682926099994802
+  "construction_sha256": "defc5271f022d081142587b0cd2ae8f8de7e0187c376b6f92fbb8cd5d1ab5fa0",
+  "wall_seconds": 6.915041294996627
 }

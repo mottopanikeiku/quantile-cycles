@@ -28,7 +28,7 @@ image = (
         ROOT,
         remote_path="/root/study",
         copy=True,
-        ignore=[".git", ".venv", "__pycache__", "results", "historical", "lean"],
+        ignore=[".git", ".venv", "__pycache__", "results", "lean"],
     )
 )
 

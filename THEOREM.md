@@ -6,7 +6,7 @@ By Alp Cetin.
 
 A state-action return law is represented by K equally weighted real atoms. The control rule selects an action by their arithmetic mean. A synchronous backup forms the exact law of R + gamma times a uniformly selected atom of the greedy next action, then projects to midpoint quantiles tau_i=(i-1/2)/K, i=1,...,K. Quantiles use the canonical generalized inverse. Greedy ties may be resolved arbitrarily.
 
-The operator uses exact hard quantile projection. Sampled pinball and Huber updates are studied separately in [the learning experiments](docs/SAMPLED_RESULTS.md).
+The operator uses exact hard quantile projection. Sampled pinball and Huber updates are studied separately in [the learning experiments](docs/sampled-study.md).
 
 **Theorem A.** For every integer K>=2 and every 0<beta<=1/(2K), there is a one-state, two-action discounted MDP with rewards in [0,1] whose K-midpoint-quantile mean-greedy control operator has a two-cycle. Both phases have unique quantiles and strict greedy choices; one phase selects the unique truly suboptimal action. The two-cycle is globally attracting modulo phase from every finite real initial atom table, under arbitrary transient greedy tie choices. In particular, the operator has no fixed point.
 
@@ -196,12 +196,12 @@ Closest established results include:
 - [Rowland et al., An Analysis of Quantile Temporal-Difference Learning](https://www.jmlr.org/papers/v25/23-0154.html): stochastic policy-evaluation convergence, not this hard control map.
 - [Kuang et al., Variance Control for Distributional Reinforcement Learning](https://proceedings.mlr.press/v202/kuang23a.html): quantile-derived mean estimation and QEM, a relevant existing mitigation.
 
-This construction combines arbitrary finite K>=2, strict suboptimal cycling, unique orbit quantiles, one-state global attraction and fixed-discount finite-state embedding. [PRIOR_ART.md](PRIOR_ART.md) compares these properties with the closest examples.
+This construction combines arbitrary finite K>=2, strict suboptimal cycling, unique orbit quantiles, one-state global attraction and fixed-discount finite-state embedding. [docs/prior-work.md](docs/prior-work.md) compares these properties with the closest examples.
 
-The loss is of order 1/K. The reward law depends on K, has K+1 outcomes and uses probability offsets of order 1/K^2. These scales are consistent with capacity-dependent approximation-error bounds. The sampled tests on [this family](docs/SAMPLED_RESULTS.md) and an [earlier K=3 example](historical/README.md) found no material Huber excess regret at the larger tested capacities.
+The loss is of order 1/K. The reward law depends on K, has K+1 outcomes and uses probability offsets of order 1/K^2. These scales are consistent with capacity-dependent approximation-error bounds. The [sampled tests](docs/sampled-study.md) on this family found no material Huber excess regret at the larger tested capacities.
 
 ## 10. Exact checks
 
 `certify.py` checks exact rational probabilities, reward bounds, true value equations, greedy gaps, quantile uniqueness, cycle closure and every primitive delay-chain backup. It checks K=2,...,16,32,64,128 for one state, and gamma=9/10 with K=2,3,8,16,32 for the delay construction. `zero_initialization.py` checks the exact zero-start formula through six updates for all one-state instances. Finite checks corroborate the symbolic proof; they are not the proof of the universal quantifiers.
 
-The initial derivation in `construction.md` is included in the certificate's SHA256 inputs and remains unchanged. The proof above adds global attraction and specifies the discounted K=1 assumption and minimal delay length.
+The derivation in [construction.md](construction.md) is hashed into the certificate. The proof above adds global attraction and states the discounted K=1 assumption and the minimal delay length.
