@@ -1,6 +1,6 @@
 # Quantile Cycles
 
-A one-state MDP in which exact quantile Bellman control never converges. The greedy action alternates between the best action and a worse one forever, and the critic tables alternate with it. The smallest case, two quantiles per action, is proved in Lean:
+Quantile Cycles is a one-state MDP in which exact quantile Bellman control never converges: the greedy action alternates between the best action and a worse one forever, and the critic tables alternate with it. The smallest case, two quantiles per action, is proved in Lean:
 
 ```lean
 theorem strict_suboptimal_two_cycle :
@@ -15,14 +15,14 @@ theorem strict_suboptimal_two_cycle :
 
 ## The smallest example
 
-One state, two actions, both return to the same state. Discount 1/4, K = 2 quantiles per action.
+The MDP has one state and two actions that both return to it, with discount 1/4 and K = 2 quantiles per action.
 
 | Action | Reward | True mean |
 | --- | --- | ---: |
 | A | 91/128 always | 91/128 |
 | B | 0, 1/2, 1 with probability 3/16, 1/2, 5/16 | 9/16 |
 
-A is better by 19/128. Run the exact quantile Bellman update, choosing the next action by the mean of each critic's two atoms, and the two critic tables below map to each other, so the update has no fixed point. One table picks A and the other picks B, each by a margin of 3/128. Always playing B would lose 19/96 in discounted value.
+Although A is better by 19/128, the exact quantile Bellman update, choosing the next action by the mean of each critic's two atoms, maps the two critic tables below to each other, so it has no fixed point. One table picks A and the other picks B, each by a margin of 3/128, and always playing B would lose 19/96 in discounted value.
 
 ![Two exact critic phases make the greedy action flip, although expected rewards favor A.](docs/two-phase-cycle.svg)
 
@@ -36,11 +36,11 @@ A is better by 19/128. Run the exact quantile Bellman update, choosing the next 
 - For a fixed discount γ, a delay chain of ⌈log(2K)/−log γ⌉ states gives an exact cycle of twice that length. The checked periods at γ = 0.9 run from 28 to 80.
 - K = 1 is the boundary: the one-atom operator is a γ-contraction and cannot cycle.
 
-`python -B verify.py` re-checks all of this in exact rational arithmetic for K = 2 to 16, 32, 64 and 128, including zero-initialized starts. It needs only the standard library.
+`python -B verify.py` re-checks all of this in exact rational arithmetic for K = 2 to 16, 32, 64 and 128, including zero-initialized starts, using only the standard library.
 
 ## Sampled learning
 
-The cycle belongs to the exact operator with its hard projection. To see what learning from samples does, I ran tabular quantile learning on the same MDPs (32 seeds, 100,000 updates, constant step size). Share of the last 20,000 greedy choices that went to the worse action B:
+The cycle belongs to the exact operator with its hard projection. To see what learning from samples does, I ran tabular quantile learning on the same MDPs (32 seeds, 100,000 updates, constant step size), and the table gives the share of the last 20,000 greedy choices that went to the worse action B:
 
 | K (MDP changes with K) | Pinball loss | Huber loss | Scalar Q-learning |
 | ---: | ---: | ---: | ---: |
@@ -48,7 +48,7 @@ The cycle belongs to the exact operator with its hard projection. To see what le
 | 8 | 7.9% | 0% | 0% |
 | 32 | 10% | 0.4% | 7.8% |
 
-Plain quantile regression (pinball loss) keeps choosing B. Quantile-Huber, the loss people actually train with, almost never does, and at K = 32 it picks B less often than scalar Q-learning on the same samples. With the K = 2 MDP fixed and a bigger critic (8 or 32 atoms), every loss reaches zero regret. This is a tabular sampler with no replay buffer or network. Decaying step sizes, population-gradient versions and intervals are in [docs/sampled-study.md](docs/sampled-study.md).
+Plain quantile regression (pinball loss) keeps choosing B, while quantile-Huber, the loss people actually train with, almost never does, and at K = 32 it picks B less often than scalar Q-learning on the same samples. With the K = 2 MDP fixed and a bigger critic (8 or 32 atoms), every loss reaches zero regret. This is a tabular sampler with no replay buffer or network, and the decaying step sizes, population-gradient versions and intervals are in [docs/sampled-study.md](docs/sampled-study.md).
 
 ## Run it
 
@@ -62,6 +62,6 @@ The sampled results re-check without retraining: `pip install -r requirements-sa
 
 ## Prior work
 
-Rowland et al. showed quantile critics can prefer a worse action once ([ICML 2019](https://proceedings.mlr.press/v97/rowland19a.html)). Bellemare, Dabney and Munos found exact distributional control can cycle, but through tie-breaking between equal-mean actions ([ICML 2017](https://proceedings.mlr.press/v70/bellemare17a.html)). Here every greedy choice is strict and the cycle is recurrent and attracting. More in [docs/prior-work.md](docs/prior-work.md). Quantile projection and Huber loss: [Dabney et al.](https://arxiv.org/abs/1710.10044).
+Rowland et al. showed quantile critics can prefer a worse action once ([ICML 2019](https://proceedings.mlr.press/v97/rowland19a.html)). Bellemare, Dabney and Munos found exact distributional control can cycle, but through tie-breaking between equal-mean actions ([ICML 2017](https://proceedings.mlr.press/v70/bellemare17a.html)). Here every greedy choice is strict and the cycle is recurrent and attracting, as [docs/prior-work.md](docs/prior-work.md) sets out in more detail. Quantile projection and the Huber loss come from [Dabney et al.](https://arxiv.org/abs/1710.10044)
 
-MIT license.
+The code is released under the MIT license.

@@ -1,6 +1,6 @@
 # Sampled learning on the cycle family
 
-Does the hard-projection cycle show up when the critic is trained by gradient steps from samples? Settings are in [`sampled-config.json`](../sampled-config.json); the code is [`sampled.py`](../sampled.py).
+This study asks whether the hard-projection cycle shows up when the critic is trained by gradient steps from samples. The settings are in [`sampled-config.json`](../sampled-config.json) and the code is [`sampled.py`](../sampled.py).
 
 ## Setup
 
@@ -15,7 +15,7 @@ A replay-buffer network experiment was planned only if Huber showed excess regre
 
 ## Results
 
-Share of the last 20,000 greedy choices that picked B, averaged over seeds:
+The table gives the share of the last 20,000 greedy choices that picked B, averaged over seeds:
 
 | MDP | Steps | Pinball | Huber | Scalar |
 | --- | --- | ---: | ---: | ---: |
@@ -26,13 +26,13 @@ Share of the last 20,000 greedy choices that picked B, averaged over seeds:
 | K = 32 | constant | 10.3% | 0.43% | 7.8% |
 | K = 32 | decaying | 2.8% | 0 | 0.23% |
 
-Hard projection picks B half the time on every family MDP, as the cycle predicts. Population Huber and scalar learning pick it never. Population pinball sits in between (40% at K = 2, 12.5% at K = 8, 11% at K = 32 with constant steps).
+Hard projection picks B half the time on every family MDP, as the cycle predicts, while population Huber and scalar learning never pick it and population pinball sits in between (40% at K = 2, 12.5% at K = 8, 11% at K = 32 with constant steps).
 
 At K = 32 with constant steps Huber beats scalar Q-learning by 7.4 points (95% interval 7.1 to 7.7). On the fixed K = 2 MDP with 8 or 32 atoms, every method has zero regret.
 
 ## Why sampling may hide the cycle
 
-The hard cycle rests on a CDF jump of size 1/(4K²). Against the binomial noise of a 32-sample batch, that margin is 0.8 standard errors at K = 2, 0.04 at K = 8 and 0.003 at K = 32. Putting it 1.96 standard errors clear at K = 32 would take about 16 million independent samples per fixed target. That ignores target drift, so read it as a scale, not a bound. I haven't tested this explanation directly.
+The hard cycle rests on a CDF jump of size 1/(4K²). Against the binomial noise of a 32-sample batch, that margin is 0.8 standard errors at K = 2, 0.04 at K = 8 and 0.003 at K = 32. Putting it 1.96 standard errors clear at K = 32 would take about 16 million independent samples per fixed target. That ignores target drift, so read it as a scale rather than a bound, and I haven't tested this explanation directly.
 
 ## Reproduce
 
@@ -42,6 +42,6 @@ python -B tools/summarize_sampled.py --check        # recompute the summary from
 python sampled.py --stage sampled --config sampled-config.json --output out.json   # rerun locally; the full grid is the long step
 ```
 
-`modal_sampled.py` splits the same runs over Modal CPU containers (about two cents in total, see [`results/sampled-compute.json`](../results/sampled-compute.json)). Seeds, checkpoints and intervals are in [`results/sampled-summary.json`](../results/sampled-summary.json); raw runs in `results/sampled-raw.json.gz` and `results/population.json.gz`.
+`modal_sampled.py` splits the same runs over Modal CPU containers (about two cents in total, see [`results/sampled-compute.json`](../results/sampled-compute.json)). Seeds, checkpoints and intervals are in [`results/sampled-summary.json`](../results/sampled-summary.json), and the raw runs are in `results/sampled-raw.json.gz` and `results/population.json.gz`.
 
-Zero-width intervals mean all 32 seeds had zero regret; they don't rule out rare failures.
+Zero-width intervals mean all 32 seeds had zero regret, which doesn't rule out rare failures.
